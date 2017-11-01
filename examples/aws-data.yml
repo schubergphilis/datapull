@@ -1,0 +1,40 @@
+name: aws-data
+
+description: Collects EC2, S3, Route53 data from multiple accounts / multiple regions
+
+configure-aws-accounts:
+  runner: json-config
+  items:
+    - acceptance:
+        accessKeyId: ${env.AWS_ACCESS_KEY_ACCEPTANCE}
+        secretAccessKey: ${env.AWS_SECRET_KEY_ACCEPTANCE}
+        _meta:
+          account: "redapple.acceptance"
+          customer: "red apple"
+    - production:
+        accessKey: ${env.AWS_ACCESS_KEY_PRODUCTION}
+        secretKey: ${env.AWS_SECRET_KEY_PRODUCTION}
+        _meta:
+          account: "redapple.production"
+          customer: "red apple"
+
+configure-aws-regions:
+  runner: json-config
+  items:
+    - ireland:
+        region: eu-west-1
+    - london:
+        region: eu-west-2
+    - frankfurt:
+        region: eu-central-1
+
+collect-ec2:
+  runner: aws-origin.EC2.describeInstances
+  pick: Reservations.Instances
+
+collect-ec2:
+  runner: aws-origin.S3.describeBuckets
+  pick: Reservations.Instances
+
+push-to-kinesis:
+  runner: aws-destination.kinesis.putRecords
