@@ -20,7 +20,9 @@ configure-aws-regions:
 
 collect-ec2:
   runner: aws-origin.EC2.describeInstances
-  pick: Reservations.Instances
+  transform:
+    - jsonpath: $.Reservations..Instances.*
+    - reduce: count
 
 push-to-kinesis:
   runner: aws-destination.kinesis.putRecords
