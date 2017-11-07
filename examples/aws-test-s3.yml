@@ -22,13 +22,13 @@ configure-aws-regions:
           region: eu-west-1
 
 collect-s3:
-  runner: aws-origin.S3.describeInstances
+  runner: aws-origin.S3.listBuckets
   runEveryXMinutes: 60
   transform:
-    - jsonpath: $.Reservations..Instances.*
+    - jsonpath: $.Buckets.*
     - reduce: count
   extendMessage:
-    resource: "aws.ec2.instances.all.count"
+    resource: "aws.s3.instances.all.count"
 
 push-to-kinesis:
   runner: aws-destination.Kinesis.putRecords
