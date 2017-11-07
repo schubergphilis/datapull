@@ -59,6 +59,6 @@ push-to-kinesis:
       eventType: "public-cloud-record"
       producedBy: "datapull.v1"
       timestamp: ${pipeline.timestamp}
-    period: ${customFunctions.monthYear()}
+    period: ${pipeline.time.year}${pipeline.time.month}
     quantity: ${data}
 
