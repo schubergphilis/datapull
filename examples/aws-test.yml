@@ -8,7 +8,8 @@ configure-aws-accounts:
     - acceptance:
         accessKeyId: ${env.AWS_K}
         secretAccessKey: ${env.AWS_S}
-        _meta:
+        extendMessage:
+          source: "aws"
           account: "redapple.acceptance"
           customer: "red apple"
 
@@ -17,12 +18,25 @@ configure-aws-regions:
   items:
     - ireland:
         region: eu-west-1
+        extendMessage:
+          region: eu-west-1
 
 collect-ec2:
   runner: aws-origin.EC2.describeInstances
+  runEveryXMinutes: 60
   transform:
     - jsonpath: $.Reservations..Instances.*
     - reduce: count
+  extendMessage:
+    resource: "aws.ec2.instances.all.count"
 
 push-to-kinesis:
   runner: aws-destination.kinesis.putRecords
+  stream: "public-cloud-records"
+  extendMessage:
+    _meta:
+      eventType: "public-cloud-record"
+      producedBy: "datapull.v1"
+      timestamp: ${pipeline.timestamp}
+    period: ${customFunctions.monthYear()}
+    quantity: ${data}

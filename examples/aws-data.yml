@@ -8,13 +8,15 @@ configure-aws-accounts:
     - acceptance:
         accessKeyId: ${env.AWS_ACCESS_KEY_ACCEPTANCE}
         secretAccessKey: ${env.AWS_SECRET_KEY_ACCEPTANCE}
-        _meta:
+        extendMessage:
+          source: "aws"
           account: "redapple.acceptance"
           customer: "red apple"
     - production:
         accessKey: ${env.AWS_ACCESS_KEY_PRODUCTION}
         secretKey: ${env.AWS_SECRET_KEY_PRODUCTION}
-        _meta:
+        extendMessage:
+          source: "aws"
           account: "redapple.production"
           customer: "red apple"
 
@@ -23,18 +25,40 @@ configure-aws-regions:
   items:
     - ireland:
         region: eu-west-1
+        extendMessage:
+          region: eu-west-1
     - london:
         region: eu-west-2
+        extendMessage:
+          region: eu-west-2
     - frankfurt:
         region: eu-central-1
+        extendMessage:
+          region: eu-central-1
 
 collect-ec2:
   runner: aws-origin.EC2.describeInstances
-  pick: Reservations.Instances
+  transform:
+    - jsonpath: $.Reservations..Instances.*
+    - reduce: count
+  extendMessage:
+    resource: "aws.ec2.instances.all.count"
 
-collect-ec2:
+collect-s3:
   runner: aws-origin.S3.describeBuckets
-  pick: Reservations.Instances
+  transform:
+    - jsonpath: "TODO: list of buckets"
+    - reduce: count
+  extendMessage:
+    resource: "aws.s3.buckets.all.count"
 
 push-to-kinesis:
   runner: aws-destination.kinesis.putRecords
+  extendMessage:
+    _meta:
+      eventType: "public-cloud-record"
+      producedBy: "datapull.v1"
+      timestamp: ${pipeline.timestamp}
+    period: ${customFunctions.monthYear()}
+    quantity: ${data}
+
