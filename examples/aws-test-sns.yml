@@ -1,6 +1,6 @@
 name: aws-data
 
-description: Collects EC2 data from one region in one account
+description: Collects SNS topics
 
 configure-aws-accounts:
   runner: json-config
@@ -47,14 +47,12 @@ configure-aws-regions:
         extendMessage:
           region: eu-central-1
 
-collect-ec2:
-  runner: aws-origin.EC2.describeInstances
-  runEveryXMinutes: 60
+collect-lambda:
+  runner: aws-origin.SNS.listTopics
   transform:
-    - jsonpath: $.Reservations..Instances.*
-    - reduce: count
+    - jsonpath: $.Topics.*
   extendMessage:
-    resource: "aws.ec2.instances.all.count"
+    resource: "aws.sns.topic"
 
 push-to-kinesis:
   runner: aws-destination.Kinesis.putRecords
@@ -69,7 +67,6 @@ push-to-kinesis:
       eventType: "public-cloud-records"
       producedBy: "datapull.v1"
       timestamp: ${pipeline.timestamp}
-    quantity: ${data}
+    quantity: 1
     period: ${pipeline.time.year}${pipeline.time.month}
-    source: "aws"
-    customer: "redapple"
+    details: ${data}

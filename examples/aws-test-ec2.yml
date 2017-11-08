@@ -1,6 +1,6 @@
 name: aws-data
 
-description: Collects EC2 data from one region in one account
+description: Collects EC2 instances
 
 configure-aws-accounts:
   runner: json-config
@@ -23,12 +23,10 @@ configure-aws-regions:
 
 collect-ec2:
   runner: aws-origin.EC2.describeInstances
-  runEveryXMinutes: 60
   transform:
     - jsonpath: $.Reservations..Instances.*
-    - reduce: count
   extendMessage:
-    resource: "aws.ec2.instances.all.count"
+    resource: "aws.ec2.instance"
 
 push-to-kinesis:
   runner: aws-destination.Kinesis.putRecords
@@ -43,5 +41,6 @@ push-to-kinesis:
       eventType: "public-cloud-records"
       producedBy: "datapull.v1"
       timestamp: ${pipeline.timestamp}
-    quantity: ${data}
+    quantity: 1
+    details: ${data}
     period: ${pipeline.time.year}${pipeline.time.month}

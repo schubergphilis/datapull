@@ -1,6 +1,6 @@
 name: aws-data
 
-description: Collects EC2 data from one region in one account
+description: Collects S3 buckets
 
 configure-aws-accounts:
   runner: json-config
@@ -23,12 +23,10 @@ configure-aws-regions:
 
 collect-s3:
   runner: aws-origin.S3.listBuckets
-  runEveryXMinutes: 60
   transform:
     - jsonpath: $.Buckets.*
-    - reduce: count
   extendMessage:
-    resource: "aws.s3.instances.all.count"
+    resource: "aws.s3.bucket"
 
 push-to-kinesis:
   runner: aws-destination.Kinesis.putRecords
@@ -43,5 +41,8 @@ push-to-kinesis:
       eventType: "public-cloud-records"
       producedBy: "datapull.v1"
       timestamp: ${pipeline.timestamp}
-    quantity: ${data}
+    quantity: 1
     period: ${pipeline.time.year}${pipeline.time.month}
+    details:
+      bucketName: ${rawData.Name}
+      creationDate: ${rawData.CreationDate}
