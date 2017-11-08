@@ -3,5 +3,5 @@
   "packages": [
     "node_modules/@datapull/*"
   ],
-  "version": "0.0.1"
+  "version": "0.0.2"
 }
