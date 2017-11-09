@@ -47,7 +47,7 @@ configure-aws-regions:
         extendMessage:
           region: eu-central-1
 
-collect-lambda:
+collect-sqs:
   runner: aws-origin.SQS.listQueues
   transform:
     - jsonpath: $.QueueUrls.*

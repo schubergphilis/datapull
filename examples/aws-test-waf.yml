@@ -47,7 +47,7 @@ configure-aws-regions:
         extendMessage:
           region: eu-central-1
 
-collect-trustedadvisor:
+collect-waf:
   runner: aws-origin.WAF.listWebACLs
   transform:
     - jsonpath: $.WebACLs.*

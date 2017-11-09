@@ -47,7 +47,7 @@ configure-aws-regions:
         extendMessage:
           region: eu-central-1
 
-collect-lambda:
+collect-sns:
   runner: aws-origin.SNS.listTopics
   transform:
     - jsonpath: $.Topics.*

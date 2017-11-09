@@ -43,6 +43,4 @@ push-to-kinesis:
       timestamp: ${pipeline.timestamp}
     quantity: 1
     period: ${pipeline.time.year}${pipeline.time.month}
-    details:
-      bucketName: ${rawData.Name}
-      creationDate: ${rawData.CreationDate}
+    details: ${data}

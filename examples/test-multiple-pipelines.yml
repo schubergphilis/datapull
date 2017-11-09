@@ -1,0 +1,163 @@
+name: aws-data
+
+description: Collects AWS Certificate Manager data
+
+configure-aws-accounts:
+  runner: json-config
+  items:
+    - acceptance:
+        accessKeyId: ${env.AWS_ACCOUNT1_K}
+        secretAccessKey: ${env.AWS_ACCOUNT1_S}
+        extendMessage:
+          account: "redapple.acceptance"
+    - development:
+        accessKeyId: ${env.AWS_ACCOUNT2_K}
+        secretAccessKey: ${env.AWS_ACCOUNT2_S}
+        extendMessage:
+          account: "redapple.development"
+    - production:
+        accessKeyId: ${env.AWS_ACCOUNT3_K}
+        secretAccessKey: ${env.AWS_ACCOUNT3_S}
+        extendMessage:
+          account: "redapple.production"
+    - services:
+        accessKeyId: ${env.AWS_ACCOUNT4_K}
+        secretAccessKey: ${env.AWS_ACCOUNT4_S}
+        extendMessage:
+          account: "redapple.services"
+    - testing:
+        accessKeyId: ${env.AWS_ACCOUNT5_K}
+        secretAccessKey: ${env.AWS_ACCOUNT5_S}
+        extendMessage:
+          account: "redapple.testing"
+
+configure-aws-regions:
+  runner: json-config
+  items:
+    - ireland:
+        region: eu-west-1
+        extendMessage:
+          region: eu-west-1
+    - london:
+        region: eu-west-2
+        extendMessage:
+          region: eu-west-2
+    - frankfurt:
+        region: eu-central-1
+        extendMessage:
+          region: eu-central-1
+
+collect-01:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+collect-02:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+collect-03:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+collect-04:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+collect-05:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+collect-06:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+collect-07:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+collect-08:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+collect-09:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+collect-10:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+collect-11:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+collect-12:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+collect-13:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+collect-14:
+  runner: aws-origin.EC2.describeInstances
+  transform:
+    - jsonpath: $.CertificateSummaryList.*
+  extendMessage:
+    resource: "aws.ec2.instance"
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  accessKeyId: test
+  secretAccessKey: test
+  region: eu-west-1
+  partitionKey: "single-shard"
+
+  extendMessage:
+    _meta:
+      eventType: "public-cloud-records"
+      producedBy: "datapull.v1"
+      timestamp: ${pipeline.timestamp}
+    quantity: 1
+    period: ${pipeline.time.year}${pipeline.time.month}
+    details: ${data}
