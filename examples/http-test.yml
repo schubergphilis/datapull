@@ -1,0 +1,27 @@
+name: generic-data
+
+description: Collects data from a HTTP API, secured by basic auth
+
+configure-basic-auth:
+  runner: json-config
+  items:
+    - production:
+        username: ${env.USER}
+        password: ${env.PASSWORD}
+
+collect:
+  runner: http-api-origin
+  auth: basic
+  method: "get"
+  url: ${env.URL}
+  format: "json"
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  region: "eu-west-1"
+  partitionKey: "single-shard"
+  accessKeyId: ${env.AWS_D_K}
+  secretAccessKey: ${env.AWS_D_S}
+  extendMessage:
+    data: ${data}
