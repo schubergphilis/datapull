@@ -15,6 +15,12 @@ collect:
   method: "get"
   url: ${env.URL}
   format: "json"
+  transform:
+    - jsonpath: $.result
+    - map: objectKeysValuesToList
+    - filter:
+        value: $._value
+        condition: isNumeric
 
 push-to-kinesis:
   runner: aws-destination.Kinesis.putRecords
@@ -24,4 +30,10 @@ push-to-kinesis:
   accessKeyId: ${env.AWS_D_K}
   secretAccessKey: ${env.AWS_D_S}
   extendMessage:
-    data: ${data}
+    _meta:
+      eventType: "public-cloud-records"
+      producedBy: "datapull.v1"
+      timestamp: ${pipeline.timestamp}
+    quantity: ${rawData._value}
+    resource: ${rawData._key}
+    details: ${data}
