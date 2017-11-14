@@ -9,6 +9,7 @@ Example pipelines can be found in the `examples/` folder.
 ## Supported Origins
 
 * AWS SDK
+* Splunk (roadmap)
 * Okta (roadmap)
 * DataDog (roadmap)
 * Generic REST API (roadmap)
@@ -29,36 +30,21 @@ Example pipelines can be found in the `examples/` folder.
 2. Install needed plugins:
 `$ npm install @datapull/aws-origin @datapull/aws-destination @datapull/jsonpath-transformer --save`
 
-3. Build your yaml definition (see `examples/` folder)
+3. Build your yaml definition (see `examples/` folder for an example)
 
-4. Parse the file with the config:
+4. Build your pipelines:
 ```
 const datapullPipeline = require('@datapull/pipeline');
-
-const pipelineConfig = datapullPipeline.parse(fileContents);
-if (!pipelineConfig) {
-  console.error("Could not parse pipeline config");
-  return;
-}
+const pipelines = datapullPipeline.buildFromFile(file);
 ```
 
-5. Build pipelines out of your config:
+5. Run your pipelines:
 ```
-try {
-  pipelines = datapullPipeline.build(pipelineConfig);
-} catch (e) {
-  console.error("Could not build the pipeline");
-  console.error(e);
-  return;
-}
-```
-
-6. Run your pipeline ('dryRun=true' will not send any messages to the destination):
-```
-const dryRun = true;
-datapullPipeline
-      .run(pipeline, dryRun)
-      .catch(err => {
-        console.log(`[main] pipeline #${idx} failed`, err);
-      });
+const Scheduler = require('@datapull/pipelines-scheduler');
+const scheduler = new Scheduler({
+  runImmediately: true,
+  runEveryXMinutes: 60,
+  dryRun: true
+});
+scheduler.launch(pipelines);
 ```
