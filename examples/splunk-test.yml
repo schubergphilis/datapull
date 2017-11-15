@@ -13,7 +13,6 @@ configure:
 
 collect:
   runner: splunk-origin
-  customer: FooBar
   transform:
     - jsonpath: $.results[(@.length-1)]
 
