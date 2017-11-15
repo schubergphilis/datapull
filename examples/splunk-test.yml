@@ -1,6 +1,6 @@
 name: generic-data
 
-description: Collects data from a HTTP API, secured by basic auth
+description: Collects data from saved Splunk search
 
 configure:
   runner: json-config
