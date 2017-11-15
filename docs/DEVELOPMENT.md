@@ -15,8 +15,13 @@ $ lerna bootstrap
 ```
 
 # How to add a dependency to a module
-Example: 
+This has to be done by manually navigating to that module's folder. Example: 
 ```
 $ cd node_modules/@datapull/cli
 $ npm install commander --save
+```
+
+# How to publish new version of all updated modules:
+```
+$ lerna publish
 ```
