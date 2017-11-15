@@ -1,0 +1,33 @@
+name: generic-data
+
+description: Collects data from saved Splunk search
+
+configure:
+  runner: json-config
+  items:
+    - production:
+        username: ${env.USER}
+        password: ${env.PASSWORD}
+        apiUrl: ${env.URL}
+        searchName: ${env.SEARCH_NAME}
+
+collect:
+  runner: splunk-origin
+  transform:
+    - jsonpath: $.results[(@.length-1)]
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  region: "eu-west-1"
+  partitionKey: "single-shard"
+  accessKeyId: ${env.AWS_D_K}
+  secretAccessKey: ${env.AWS_D_S}
+  extendMessage:
+    _meta:
+      eventType: "public-cloud-records"
+      producedBy: "datapull.v1"
+      timestamp: ${pipeline.timestamp}
+    details: ${data}
+    period: ${pipeline.time.year}${pipeline.time.month}
+    quantity: ${rawData.total}
