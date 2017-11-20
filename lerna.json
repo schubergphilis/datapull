@@ -1,7 +1,7 @@
 {
   "lerna": "2.4.0",
   "packages": [
-    "node_modules/@datapull/*"
+    "packages/@datapull/*"
   ],
   "version": "0.0.12"
 }
