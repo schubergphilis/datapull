@@ -1,5 +1,4 @@
 const util = require('util');
-const request = require('request-promise-native');
 const chef_api = require("chef-api");
 
 class ChefOrigin {
@@ -21,13 +20,23 @@ class ChefOrigin {
         const options = {
             user_name: config.username,
             key_path: config.key_path,
-            organization: this.config.organization
+            url: config.apiUrl
         };
 
         const chef = new chef_api();
-        chef.config(options);
-        nodes = utils.promisify(chef.getNodes)()
-        console.log(nodes);
+        const nodes = await util.promisify(chef.getNodes)()
+        const results = [];
+        for (const nodeName in nodes) {
+            if (nodes.hasOwnProperty(nodeName)) {
+                console.log(nodeName);
+                const node = await util.promisify(chef.getNode)(nodeName);
+                results.push({
+                    name: nodeName,
+                    chef_environment: node['chef_environment'],
+                    run_list: node['run_list']
+                });
+            }
+        }
 
         return results;
     }
