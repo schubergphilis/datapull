@@ -26,6 +26,18 @@ class HttpApiOrigin {
     };
   }
 
+  setupBasicAuth(config, options) {
+    if (this.config.auth === 'basic') {
+      if (!config.username) {
+        throw Error('HTTP Origin: username for basic auth is not set up');
+      }
+      if (!config.password) {
+        throw Error('HTTP Origin: password for basic auth is not set up');
+      }
+      options.auth = `${config.username}:${config.password}`;
+    }
+  }
+
   pullData(config) {
     console.log('[HTTP Origin] fetching', this.method, this.url);
 
@@ -38,15 +50,7 @@ class HttpApiOrigin {
         method: this.method
       };
 
-      if (this.config.auth === 'basic') {
-        if (!config.username) {
-          throw Error('HTTP Origin: username for basic auth is not set up');
-        }
-        if (!config.password) {
-          throw Error('HTTP Origin: password for basic auth is not set up');
-        }
-        options.auth = `${config.username}:${config.password}`;
-      }
+      this.setupBasicAuth(config, options);
 
       const req = http.request(options, (res) => {
         const {statusCode} = res;

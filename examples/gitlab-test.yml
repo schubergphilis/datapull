@@ -1,0 +1,43 @@
+name: generic-data
+
+description: Collects data from Gitlab using http-origin
+
+configure-basic-auth:
+  runner: json-config
+  items:
+    - production:
+        token: ${env.GITLAB_TOKEN}
+
+
+collect:
+  runner: http-api-origin
+  auth: basic
+  method: "get"
+  url: ${env.URL}
+  format: "json"
+  pagination:
+    pageKey: "page"
+    from: 1
+    until: "empty-results"
+  transform:
+    - jsonpath: $.result
+    - map: objectKeysValuesToList
+    - filter:
+        value: $._value
+        condition: isNumeric
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  region: "eu-west-1"
+  partitionKey: "single-shard"
+  accessKeyId: ${env.AWS_D_K}
+  secretAccessKey: ${env.AWS_D_S}
+  extendMessage:
+    _meta:
+      eventType: "public-cloud-records"
+      producedBy: "datapull.v1"
+      timestamp: ${pipeline.timestamp}
+    quantity: ${rawData._value}
+    resource: ${rawData._key}
+    details: ${data}

@@ -8,16 +8,18 @@ Example pipelines can be found in the `examples/` folder.
 
 ## Supported Origins
 
-* AWS SDK
-* Splunk (roadmap)
+* Generic REST API (roadmap)
+* AWS
+* Splunk
 * Okta (roadmap)
 * DataDog (roadmap)
-* Generic REST API (roadmap)
 
 # Supported transformations
 
 * `jsonpath` - pick fields from origin's response
-* `count` - count the number of returned rows
+* `filter` - exclude data from the data set
+* `map` - transform the data
+* `reduce` - reduce the data set to a single value / value object
 
 ## Destinations
 
@@ -48,3 +50,6 @@ const scheduler = new Scheduler({
 });
 scheduler.launch(pipelines);
 ```
+
+# Development
+Please read [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
