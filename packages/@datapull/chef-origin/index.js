@@ -24,11 +24,11 @@ class ChefOrigin {
         };
 
         const chef = new chef_api();
+        chef.config(options);
         const nodes = await util.promisify(chef.getNodes)()
         const results = [];
         for (const nodeName in nodes) {
             if (nodes.hasOwnProperty(nodeName)) {
-                console.log(nodeName);
                 const node = await util.promisify(chef.getNode)(nodeName);
                 results.push({
                     name: nodeName,
