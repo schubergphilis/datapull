@@ -3,6 +3,9 @@
   "version": "0.0.6",
   "description": "CLI for datapull",
   "main": "index.js",
+  "bin": {
+    "datapull": "./bin/datapull.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,5 +17,8 @@
   "dependencies": {
     "cli-table2": "^0.2.0",
     "commander": "^2.11.0"
+  },
+  "devDependencies": {
+    "@datapull/pipeline": "0.x.x"
   }
 }

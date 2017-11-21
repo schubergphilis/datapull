@@ -16,5 +16,16 @@
     "deepcopy": "^0.6.3",
     "js-yaml": "^3.10.0",
     "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "@datapull/http-api-origin": "0.x.x",
+    "@datapull/aws-destination": "0.x.x",
+    "@datapull/aws-origin": "0.x.x",
+    "@datapull/filter-transformer": "0.x.x",
+    "@datapull/json-config": "0.x.x",
+    "@datapull/jsonpath-transformer": "0.x.x",
+    "@datapull/map-transformer": "0.x.x",
+    "@datapull/reduce-transformer": "0.x.x",
+    "@datapull/splunk-origin": "0.x.x"
   }
 }

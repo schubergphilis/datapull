@@ -2,7 +2,4 @@
 
 lerna-debug.log
 
-node_modules/*
-!node_modules/.bin
-!node_modules/@datapull
-node_modules/@datapull/**/node_modules
+packages/@datapull/**/node_modules
