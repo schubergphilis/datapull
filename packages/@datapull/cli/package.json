@@ -3,6 +3,9 @@
   "version": "0.0.6",
   "description": "CLI for datapull",
   "main": "index.js",
+  "bin": {
+    "datapull": "./bin/datapull.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
