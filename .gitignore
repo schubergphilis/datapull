@@ -2,4 +2,6 @@
 
 lerna-debug.log
 
-packages/@datapull/**/node_modules
+node_modules
+packages/@datapull/*/node_modules
+packages/@datapull/*/package-lock.json
