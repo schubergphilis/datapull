@@ -1,6 +1,6 @@
 {
   "name": "@datapull/json-config",
-  "version": "0.0.4",
+  "version": "0.0.13",
   "description": "JSON configurator for Datapull pipelines",
   "main": "index.js",
   "scripts": {

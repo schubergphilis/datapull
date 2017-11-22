@@ -1,6 +1,6 @@
 {
   "name": "@datapull/chef-origin",
-  "version": "0.0.10",
+  "version": "0.0.13",
   "description": "Data origin for Datapull: pull data from Splunk",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "chef-api": "0.6.0",
-    "ursa": "^0.9.4",
-    "object-path": "^0.11.4"
+    "object-path": "^0.11.4",
+    "ursa": "^0.9.4"
   }
 }

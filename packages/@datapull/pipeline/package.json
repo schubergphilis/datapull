@@ -1,6 +1,6 @@
 {
   "name": "@datapull/pipeline",
-  "version": "0.0.7",
+  "version": "0.0.13",
   "description": "Pipeline reads a yaml file with pipeline declaration, builds a plan for the given pipeline and runs it",
   "main": "index.js",
   "scripts": {
@@ -12,21 +12,21 @@
     "access": "public"
   },
   "dependencies": {
-    "@datapull/json-config": "^0.0.4",
+    "@datapull/json-config": "^0.0.13",
     "deepcopy": "^0.6.3",
     "js-yaml": "^3.10.0",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "@datapull/http-api-origin": "0.x.x",
-    "@datapull/aws-destination": "0.x.x",
-    "@datapull/aws-origin": "0.x.x",
-    "@datapull/filter-transformer": "0.x.x",
-    "@datapull/json-config": "0.x.x",
-    "@datapull/jsonpath-transformer": "0.x.x",
-    "@datapull/map-transformer": "0.x.x",
-    "@datapull/reduce-transformer": "0.x.x",
-    "@datapull/splunk-origin": "0.x.x",
-    "@datapull/chef-origin": "0.x.x"
+    "@datapull/aws-destination": "^0.0.13",
+    "@datapull/aws-origin": "^0.0.13",
+    "@datapull/chef-origin": "^0.0.13",
+    "@datapull/filter-transformer": "^0.0.13",
+    "@datapull/http-api-origin": "^0.0.13",
+    "@datapull/json-config": "^0.0.13",
+    "@datapull/jsonpath-transformer": "^0.0.13",
+    "@datapull/map-transformer": "^0.0.13",
+    "@datapull/reduce-transformer": "^0.0.13",
+    "@datapull/splunk-origin": "^0.0.13"
   }
 }
