@@ -39,10 +39,6 @@ class ChefOrigin {
     }
 }
 
-async function sleep(msec) {
-    return new Promise(resolve => setTimeout(resolve, msec));
-}
-
 exports.datapullStep = {
     isOrigin: true,
     constructor: ChefOrigin
