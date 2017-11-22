@@ -12,8 +12,6 @@ configure:
 
 collect:
   runner: chef-origin
-  # transform:
-  #   - jsonpath: $.results[(@.length-1)]
 
 push-to-kinesis:
   runner: aws-destination.Kinesis.putRecords
