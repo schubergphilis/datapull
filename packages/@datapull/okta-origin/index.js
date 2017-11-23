@@ -50,6 +50,7 @@ class HttpApiOrigin {
     }
 
     if (this.config.isPaginatedList) {
+      // setup recursive fetch:
       const fetchListData = (url, paginationLink, accumulatedData) => {
 
         return got[METHOD](paginationLink || url, {
@@ -58,22 +59,28 @@ class HttpApiOrigin {
             'Content-Type': 'application/json',
             'Authorization': `SSWS ${API_KEY}`,
           }
-        }).then(resp => {
-          const json = JSON.parse(resp.body);
+        })
+          .catch(err => {
+            console.error(`[Okta Origin] could not fetch data ${err}`)
+            throw err;
+          })
+          .then(resp => {
+            const json = JSON.parse(resp.body);
 
-          if (Array.isArray(json)) {
-            if (resp.headers.link) {
-              const nextLink = this.getNextLink(resp.headers.link);
-              if (nextLink) {
-                return fetchListData(url, nextLink, accumulatedData.concat(json));
+            if (Array.isArray(json)) {
+              if (resp.headers.link) {
+                const nextLink = this.getNextLink(resp.headers.link);
+                if (nextLink) {
+                  return fetchListData(url, nextLink, accumulatedData.concat(json));
+                }
               }
-            }
 
-            return accumulatedData.concat(json);
-          }
-        });
+              return accumulatedData.concat(json);
+            }
+          });
       };
 
+      // fetch data:
       return new Promise((resolve, reject) => {
         fetchListData(URL, null, [])
           .then(accumulatedData => {
@@ -86,7 +93,7 @@ class HttpApiOrigin {
       });
     }
 
-    throw new Error(`Okta Origin: set isPaginatedList to true, other types of request are not currently supported.`);
+    throw new Error(`Okta Origin: set 'isPaginatedList' to true, other types of request are not currently supported.`);
   }
 
   getNextLink(linkHeader) {
