@@ -1,0 +1,36 @@
+name: okta-users-data
+
+description: Collects data from Okta API and pushes non-sensitive fields to Kinesis
+
+collect:
+  runner: okta-origin
+  url: ${env.OKTA_URL}/api/v1/users?filter=status eq "ACTIVE"
+  apiKey: ${env.OKTA_API_KEY}
+  isPaginatedList: true
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  region: "eu-west-1"
+  partitionKey: "single-shard"
+  accessKeyId: ${env.AWS_D_K}
+  secretAccessKey: ${env.AWS_D_S}
+  extendMessage:
+    _meta:
+      eventType: "public-cloud-records"
+      producedBy: "datapull.v1"
+      timestamp: ${pipeline.timestamp}
+    details:
+      status: ${rawData.status}
+      id: ${rawData.id}
+      created: ${rawData.created}
+      activated: ${rawData.activated}
+      statusChanged: ${rawData.statusChanged}
+      lastLogin: ${rawData.lastLogin}
+      lastUpdated: ${rawData.lastLogin}
+      passwordChanged: ${rawData.passwordChanged}
+      organization: ${rawData.profile.organization}
+      employeeNumber: ${rawData.profile.employeeNumber}
+      locale: ${rawData.profile.locale}
+    period: ${pipeline.time.year}${pipeline.time.month}
+    quantity: 1

@@ -12,7 +12,7 @@ $ npm install -g lerna
 
 2. Install dependencies for all modules:
 ```
-$ lerna bootstrap
+$ lerna bootstrap -- --no-shrinkwrap
 ```
 
 # How to add a dependency to a module
