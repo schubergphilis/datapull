@@ -27,6 +27,7 @@
     "@datapull/jsonpath-transformer": "^0.0.13",
     "@datapull/map-transformer": "^0.0.13",
     "@datapull/reduce-transformer": "^0.0.13",
-    "@datapull/splunk-origin": "^0.0.13"
+    "@datapull/splunk-origin": "^0.0.13",
+    "@datapull/okta-origin": "0.x.x"
   }
 }

@@ -71,6 +71,15 @@ exports.build = function (config) {
 
   pipelines = pipelines.map(p => { return {config: p, configProcessors, messageTemplate: p.messageTemplate}; });
 
+  // if there is no config defined, create an empty one:
+  if (!pipelines.length) {
+    pipelines.push({
+      config: {},
+      configProcessors: [],
+      messageTemplate: {}
+    });
+  }
+
   console.log('[Pipeline] intermediate pipelines length:', pipelines.length);
 
   // 3 - set up origins:

@@ -32,11 +32,17 @@ exports.buildMessage = function (messageTemplate, pipeline, data) {
         r[k] = replaceVariables(obj[k]);
       } else {
         // parse the template:
-        r[k] = template(v, templateSettings)(templateVars);
+        try {
+          r[k] = template(v, templateSettings)(templateVars);
 
-        // check for numeric values:
-        if (!isNaN(r[k])) {
-          r[k] = Number(r[k]);
+          // check for numeric values:
+          if (!isNaN(r[k])) {
+            r[k] = Number(r[k]);
+          }
+        } catch (e) {
+          console.warn(`[Pipeline message build] Could not parse template for key ${k}, got exception: ${e}`);
+          console.warn(`[Pipeline message build] Setting ${k} value to null`);
+          r[k] = null;
         }
       }
     });
