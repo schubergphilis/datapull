@@ -1,6 +1,6 @@
 {
   "name": "@datapull/pipeline",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Pipeline reads a yaml file with pipeline declaration, builds a plan for the given pipeline and runs it",
   "main": "index.js",
   "scripts": {
@@ -26,8 +26,8 @@
     "@datapull/json-config": "^0.0.13",
     "@datapull/jsonpath-transformer": "^0.0.13",
     "@datapull/map-transformer": "^0.0.13",
+    "@datapull/okta-origin": "^0.0.14",
     "@datapull/reduce-transformer": "^0.0.13",
-    "@datapull/splunk-origin": "^0.0.13",
-    "@datapull/okta-origin": "0.x.x"
+    "@datapull/splunk-origin": "^0.0.13"
   }
 }

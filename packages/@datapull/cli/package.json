@@ -1,6 +1,6 @@
 {
   "name": "@datapull/cli",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "CLI for datapull",
   "main": "index.js",
   "bin": {
@@ -19,6 +19,6 @@
     "commander": "^2.11.0"
   },
   "devDependencies": {
-    "@datapull/pipeline": "^0.0.13"
+    "@datapull/pipeline": "^0.0.14"
   }
 }
