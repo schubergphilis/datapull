@@ -2,6 +2,14 @@ const aws = require('aws-sdk');
 const pick = require('lodash/pick');
 const processConfig = require('@datapull/json-config').processConfig;
 
+const SECONDS = 1000;
+
+function delay(t) {
+  return new Promise(resolve => {
+    setTimeout(resolve, t);
+  });
+}
+
 class AwsDestination {
   constructor(config) {
     // replace variables in the config:
@@ -42,8 +50,6 @@ class AwsDestination {
       return Promise.resolve("No messages to push");
     }
 
-    console.log(`[AWS Destination] pushing ${messages.length} messages to aws`);
-
     return new Promise((resolve, reject) => {
       const params = {};
 
@@ -75,18 +81,37 @@ class AwsDestination {
         return reject(`Destination region is not specified`);
       }
 
-      this.serviceClient[this.config.method].call(this.serviceClient, params, (err, resp) => {
-        if (err) {
-          console.error('[AWS Destination] ERROR ', err);
-          return reject(err);
-        }
+      const sendToKinesis = (records) => {
+        params.Records = records;
 
-        if (resp.FailedRecordCount > 0) {
-          console.error('FailedRecordCount', resp.FailedRecordCount);
-        }
+        console.log(`[AWS Destination] pushing ${params.Records.length} messages to aws (out of ${messages.length} total)`);
 
-        resolve(resp);
-      });
+        this.serviceClient[this.config.method].call(this.serviceClient, params, (err, resp) => {
+          if (err) {
+            console.error('[AWS Destination] ERROR ', err);
+            return reject(err);
+          }
+
+          // check if some of the messages were not consumed:
+          if (resp.FailedRecordCount > 0) {
+            console.error(`FailedRecordCount ${resp.FailedRecordCount}. Will retry`);
+
+            // retry after delay:
+            delay(5 * SECONDS)
+              .then(() => {
+                sendToKinesis(records.slice(-1 * Number(resp.FailedRecordCount)));
+              });
+            return;
+          }
+
+          // job finished:
+          console.log(`[AWS Destination] finished sending ${messages.length} messages`);
+          resolve(resp);
+        });
+      };
+
+      // start sending:
+      sendToKinesis(params.Records);
     });
   }
 }
