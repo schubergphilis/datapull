@@ -20,8 +20,6 @@ class HttpApiOrigin {
   }
 
   pullData(pipelineConfig) {
-    console.log('[Okta Origin] fetching', this.method, this.url);
-
     // merge step and pipeline configs:
     let mergedConfig = Object.assign(
       {
@@ -52,6 +50,7 @@ class HttpApiOrigin {
     if (this.config.isPaginatedList) {
       // setup recursive fetch:
       const fetchListData = (url, paginationLink, accumulatedData) => {
+        console.log('[Okta Origin] fetching', METHOD, url);
 
         return got[METHOD](paginationLink || url, {
           headers: {

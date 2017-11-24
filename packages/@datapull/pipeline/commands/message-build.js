@@ -39,6 +39,15 @@ exports.buildMessage = function (messageTemplate, pipeline, data) {
           if (!isNaN(r[k])) {
             r[k] = Number(r[k]);
           }
+
+          // check if the value is json parseable:
+          if (typeof r[k] === 'string' && r[k].startsWith("{") && r[k].endsWith("}")) {
+            try {
+              r[k] = JSON.parse(r[k]);
+            } catch (err) {
+              // no-op
+            }
+          }
         } catch (e) {
           console.warn(`[Pipeline message build] Could not parse template for key ${k}, got exception: ${e}`);
           console.warn(`[Pipeline message build] Setting ${k} value to null`);
