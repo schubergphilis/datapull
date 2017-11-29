@@ -2,13 +2,25 @@ name: generic-data
 
 description: Collects data from Chef API
 
-configure:
+configure-chef-key:
   runner: json-config
   items:
-    - production:
-        username: ${env.USER}
-        key_path: ${env.KEY_PATH}
-        apiUrl: ${env.URL}
+    - all:
+        username: ${env.CHEF_USER}
+        key_path: ${env.CHEF_KEY_PATH}
+
+
+configure-chef-orgs:
+  runner: json-config
+  items:
+    - org1:
+        apiUrl: ${env.CHEF_URL_ORG1}
+        extendMessage:
+          customer: "org1"
+    - org2:
+        apiUrl: ${env.CHEF_URL_ORG2}
+        extendMessage:
+          customer: "org2"
 
 collect:
   runner: chef-origin
@@ -25,6 +37,10 @@ push-to-kinesis:
       eventType: "public-cloud-records"
       producedBy: "datapull.v1"
       timestamp: ${pipeline.timestamp}
-    details: ${data}
     period: ${pipeline.time.year}${pipeline.time.month}
     quantity: ${rawData.total}
+    details:
+      name: ${rawData.name}
+      chefEnvironment: ${rawData.chef_environment}
+      cpu:
+        total: ${JSON.stringify(rawData.automatic.cpu)}

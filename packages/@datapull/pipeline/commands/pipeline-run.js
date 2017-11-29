@@ -1,6 +1,6 @@
 const buildMessage = require('./message-build').buildMessage;
 
-exports.run = function (pipeline, dryRun) {
+exports.run = function (pipeline, options={}) {
   // prepare config:
   let config = null;
 
@@ -63,6 +63,10 @@ exports.run = function (pipeline, dryRun) {
     })
     .then(transformedData => {
 
+      if (!pipeline.destination.runner) {
+        return console.warn('[Pipeline] destination does not specify a runner');
+      }
+
       // build message / messages:
       let messages = [];
       if (Array.isArray(transformedData)) {
@@ -71,16 +75,27 @@ exports.run = function (pipeline, dryRun) {
         messages[0] = buildMessage(pipeline.messageTemplate, pipeline, transformedData);
       }
 
-      // run destination
-      messages.forEach(m => {
-        console.log('[Pipeline] base64 record size', new Buffer(JSON.stringify(m)).toString('base64').length);
-      });
-
-      if (!pipeline.destination.runner) {
-        return console.warn('[Pipeline] destination does not specify a runner');
+      // show stats if needed:
+      if (options.showMessageSizes) {
+        messages.forEach(m => {
+          console.log('[Pipeline] base64 record size', new Buffer(JSON.stringify(m)).toString('base64').length);
+        });
       }
 
-      return pipeline.destination.runner(messages, dryRun);
+      if (options.showOriginConfig) {
+        console.log(`[Pipeline] config`, config);
+      }
+
+      if (options.showMessagesCount) {
+        console.log(`[Pipeline] messages to be delivered: ${messages.length}`);
+      }
+
+      if (options.stopBeforeDestination) {
+        return;
+      }
+
+      // run destination
+      return pipeline.destination.runner(messages, options.dryRun);
     })
     .catch(err => {
       console.error('[Pipeline] sending failed', pipeline.origin.name, ':', err)

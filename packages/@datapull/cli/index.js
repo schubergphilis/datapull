@@ -90,6 +90,20 @@ exports.run = function () {
     });
 
   program
+    .command("stats <file>")
+    .action(function (file) {
+      const pipelines = buildPipelines(file);
+      pipelines.forEach((pipeline, idx) => {
+        console.log(`[CLI stats] Dry run for pipeline #${idx}`);
+        datapullPipeline
+          .statsOnly(pipeline)
+          .catch(err => {
+            console.log(`[CLI stats] pipeline #${idx} failed`, err);
+          });
+      });
+    });
+
+  program
     .command("run <file>")
     .action(function (file) {
       const pipelines = buildPipelines(file);
