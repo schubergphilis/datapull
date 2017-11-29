@@ -12,6 +12,7 @@
     "access": "public"
   },
   "dependencies": {
+    "bottleneck": "^1.16.0",
     "chef-api": "0.6.0",
     "object-path": "^0.11.4",
     "ursa": "^0.9.4"

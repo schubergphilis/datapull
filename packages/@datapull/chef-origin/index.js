@@ -1,6 +1,7 @@
 const util = require('util');
 const fs = require('fs');
 const chef_api = require("chef-api");
+const Bottleneck = require("bottleneck");
 
 class ChefOrigin {
 
@@ -36,9 +37,23 @@ class ChefOrigin {
         chef.config(options);
         const nodes = await util.promisify(chef.getNodes)();
         const results = [];
+
+        // setup rate limiter:
+        const rateLimitConfig = pipelineConfig.rateLimiter || {};
+        const maxConcurrent = rateLimitConfig.maxConcurrent || 10;
+        const minTime = rateLimitConfig.minTimeBetweenRequestsMs || 200;
+        const highWater = rateLimitConfig.highWater || -1;
+        const rateLimitStrategy = rateLimitConfig.rateLimitStrategy || 'BLOCK';
+        const rejectOnDrop = 'rejectOnDrop' in rateLimitConfig ? rateLimitConfig.rejectOnDrop : true;
+
+        const limiter = new Bottleneck(maxConcurrent, minTime, highWater, Bottleneck.strategy[rateLimitStrategy], rejectOnDrop);
+
+        // queue all the nodes:
         for (const nodeName in nodes) {
             if (nodes.hasOwnProperty(nodeName)) {
-                const node = util.promisify(chef.getNode)(nodeName);
+                const node = limiter.schedule(function () {
+                  return util.promisify(chef.getNode)(nodeName);
+                });
                 results.push(node);
             }
         }

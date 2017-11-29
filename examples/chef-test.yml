@@ -8,6 +8,9 @@ configure-chef-key:
     - all:
         username: ${env.CHEF_USER}
         key_path: ${env.CHEF_KEY_PATH}
+        rateLimiter:
+          maxConcurrent: 50
+          minTimeBetweenRequestsMs: 100
 
 
 configure-chef-orgs:
