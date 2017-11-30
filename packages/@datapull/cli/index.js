@@ -2,6 +2,7 @@ const program = require('commander');
 const Table = require('cli-table2');
 const fs = require('fs');
 const datapullPipeline = require('@datapull/pipeline');
+const Scheduler = require('@datapull/pipelines-scheduler').Scheduler;
 const packagejson = require('./package.json');
 
 const buildPipelines = function (file) {
@@ -77,16 +78,19 @@ exports.run = function () {
 
   program
     .command("preview <file>")
-    .action(function (file) {
+    .option('--maxConcurrent <number>', "How many pipelines to run concurrently")
+    .action(function (file, options) {
       const pipelines = buildPipelines(file);
-      pipelines.forEach((pipeline, idx) => {
-        console.log(`[CLI preview] Dry run for pipeline #${idx}`);
-        datapullPipeline
-          .dryRun(pipeline)
-          .catch(err => {
-            console.log(`[CLI preview] pipeline #${idx} failed`, err);
-          });
+
+      const scheduler = new Scheduler({
+        name: "CLI single schedule",
+        maxConcurrent: options.maxConcurrent,
+        runImmediately: true,
+        runEveryXMinutes: 60,
+        dryRun: process.env.DRY_RUN || false
       });
+
+      scheduler.launch(pipelines);
     });
 
   program

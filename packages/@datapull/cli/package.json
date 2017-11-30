@@ -15,6 +15,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@datapull/pipelines-scheduler": "^0.0.17",
     "cli-table2": "^0.2.0",
     "commander": "^2.11.0"
   },
