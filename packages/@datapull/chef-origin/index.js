@@ -36,7 +36,6 @@ class ChefOrigin {
         const chef = new chef_api();
         chef.config(options);
         const nodes = await util.promisify(chef.getNodes)();
-        const results = [];
 
         // setup rate limiter:
         const rateLimitConfig = pipelineConfig.rateLimiter || {};
@@ -48,16 +47,8 @@ class ChefOrigin {
 
         const limiter = new Bottleneck(maxConcurrent, minTime, highWater, Bottleneck.strategy[rateLimitStrategy], rejectOnDrop);
 
-        // queue all the nodes:
-        for (const nodeName in nodes) {
-            if (nodes.hasOwnProperty(nodeName)) {
-                const node = limiter.schedule(function () {
-                  return util.promisify(chef.getNode)(nodeName);
-                });
-                results.push(node);
-            }
-        }
-
+        // get info of every node with a separate request:
+        const results = Object.keys(nodes).map(nodeName => limiter.schedule(util.promisify(chef.getNode), nodeName));
         return await Promise.all(results);
     }
 }
