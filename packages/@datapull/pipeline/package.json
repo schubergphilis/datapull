@@ -1,6 +1,6 @@
 {
   "name": "@datapull/pipeline",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Pipeline reads a yaml file with pipeline declaration, builds a plan for the given pipeline and runs it",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
   "devDependencies": {
     "@datapull/aws-destination": "^0.0.16",
     "@datapull/aws-origin": "^0.0.13",
-    "@datapull/chef-origin": "^0.0.13",
+    "@datapull/chef-origin": "^0.0.17",
     "@datapull/filter-transformer": "^0.0.13",
     "@datapull/http-api-origin": "^0.0.13",
     "@datapull/json-config": "^0.0.13",
