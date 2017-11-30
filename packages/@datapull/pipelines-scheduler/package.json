@@ -12,6 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@datapull/pipeline": "^0.0.17"
+    "@datapull/pipeline": "^0.0.17",
+    "bottleneck": "^1.16.0"
   }
 }
