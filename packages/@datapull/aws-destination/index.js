@@ -1,6 +1,8 @@
 const aws = require('aws-sdk');
 const pick = require('lodash/pick');
 const processConfig = require('@datapull/json-config').processConfig;
+const splitIntoBatches = require('./util/batch-splitter');
+const Bottleneck = require("bottleneck");
 
 const SECONDS = 1000;
 
@@ -82,36 +84,77 @@ class AwsDestination {
       }
 
       const sendToKinesis = (records) => {
-        params.Records = records;
+        return new Promise((resolve, reject) => {
+          console.log(`[AWS Destination] pushing ${params.Records.length} messages to aws (out of ${messages.length} total)`);
 
-        console.log(`[AWS Destination] pushing ${params.Records.length} messages to aws (out of ${messages.length} total)`);
+          const sendAttempt = (records) => {
+            params.Records = records;
 
-        this.serviceClient[this.config.method].call(this.serviceClient, params, (err, resp) => {
-          if (err) {
-            console.error('[AWS Destination] ERROR ', err);
-            return reject(err);
-          }
+            let collectionSize = 0;
+            records.forEach(r => {
+              collectionSize += r.Data.length + r.PartitionKey.length;
+            });
 
-          // check if some of the messages were not consumed:
-          if (resp.FailedRecordCount > 0) {
-            console.error(`FailedRecordCount ${resp.FailedRecordCount}. Will retry`);
+            console.log(`[AWS Destination] attempting to send ${records.length} messages. Collection size: ${collectionSize}`);
 
-            // retry after delay:
-            delay(5 * SECONDS)
-              .then(() => {
-                sendToKinesis(records.slice(-1 * Number(resp.FailedRecordCount)));
-              });
-            return;
-          }
+            this.serviceClient[this.config.method].call(this.serviceClient, params, (err, resp) => {
+              if (err) {
+                console.error('[AWS Destination] ERROR ', err);
+                return reject(err);
+              }
 
-          // job finished:
-          console.log(`[AWS Destination] finished sending ${messages.length} messages`);
-          resolve(resp);
+              // check if some of the messages were not consumed:
+              if (resp.FailedRecordCount > 0) {
+                console.error(`[AWS Destination] FailedRecordCount ${resp.FailedRecordCount}`);
+
+                // retry after delay:
+                delay(5 * SECONDS)
+                  .then(() => {
+                    sendAttempt(records.slice(-1 * Number(resp.FailedRecordCount)));
+                  });
+                return;
+              }
+
+              // job finished:
+              console.log(`[AWS Destination] finished sending ${params.Records.length} messages`);
+              resolve(resp);
+            });
+          };
+          sendAttempt(records);
         });
       };
 
-      // start sending:
-      sendToKinesis(params.Records);
+      // split messages into chunks:
+      splitIntoBatches(params.Records, (err, chunks) => {
+        if (err) {
+          console.error(`[AWS Destination] could not split records into batches`, err);
+          return reject(err);
+        }
+
+        const messagesTotal = params.Records.length;
+        console.log(`[AWS Destination] pushing ${messagesTotal} messages in ${chunks.length} chunk(s)`);
+
+        // setup rate limiter:
+        const config = this.config || {};
+        const rateLimitConfig = config.rateLimiter || {};
+        const maxConcurrent = rateLimitConfig.maxConcurrent || 1;
+        const minTime = rateLimitConfig.minTimeBetweenRequestsMs || 1100;
+        const highWater = rateLimitConfig.highWater || -1;
+        const rateLimitStrategy = rateLimitConfig.rateLimitStrategy || 'OVERFLOW';
+        const rejectOnDrop = 'rejectOnDrop' in rateLimitConfig ? rateLimitConfig.rejectOnDrop : false;
+
+        const limiter = new Bottleneck(maxConcurrent, minTime, highWater, Bottleneck.strategy[rateLimitStrategy], rejectOnDrop);
+
+        // start sending:
+        const promises = chunks.map(ch => limiter.schedule(sendToKinesis, ch));
+        Promise
+          .all(promises)
+          .then(responses => {
+            console.log(`[AWS Destination] finished sending ${messagesTotal} messages in ${chunks.length} chunk(s)`);
+            resolve(responses);
+          })
+          .catch(err => reject(err));
+      });
     });
   }
 }

@@ -87,7 +87,9 @@ exports.run = function () {
         maxConcurrent: options.maxConcurrent,
         runImmediately: true,
         runEveryXMinutes: 60,
-        dryRun: process.env.DRY_RUN || false
+        pipelineConfig: {
+          dryRun: true
+        }
       });
 
       scheduler.launch(pipelines);
@@ -109,16 +111,21 @@ exports.run = function () {
 
   program
     .command("run <file>")
-    .action(function (file) {
+    .option('--maxConcurrent <number>', "How many pipelines to run concurrently")
+    .action(function (file, options) {
       const pipelines = buildPipelines(file);
-      pipelines.forEach((pipeline, idx) => {
-        console.log(`[CLI run] run for pipeline #${idx}`);
-        datapullPipeline
-          .run(pipeline)
-          .catch(err => {
-            console.log(`[CLI run] pipeline #${idx} failed`, err);
-          });
+
+      const scheduler = new Scheduler({
+        name: "CLI single schedule",
+        maxConcurrent: options.maxConcurrent,
+        runImmediately: true,
+        runEveryXMinutes: 60,
+        pipelineConfig: {
+          dryRun: false
+        }
       });
+
+      scheduler.launch(pipelines);
     });
 
   program.parse(process.argv);

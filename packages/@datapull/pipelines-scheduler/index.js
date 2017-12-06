@@ -39,9 +39,9 @@ class Scheduler {
       // all pipelines should have the same timestamp:
       pipeline.timestamp = now;
 
-      console.log(`[main] run for pipeline #${idx}: ${pipeline.timestamp}`);
+      console.log(`[main] ${this.config.pipelineConfig.dryRun ? 'dry' : ''} run for pipeline #${idx}: ${pipeline.timestamp}`);
 
-      limiter.schedule(datapullPipeline.run, pipeline, this.config.dryRun);
+      limiter.schedule(datapullPipeline.run, pipeline, this.config.pipelineConfig || {});
     });
 
 

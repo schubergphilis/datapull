@@ -11,6 +11,10 @@ exports.buildMessage = function (messageTemplate, pipeline, data) {
 
   const templateVars = Object.assign({}, {
     pipeline: {
+      config: {
+        raw: pipeline.config,
+        processed: pipeline.processedConfig
+      },
       timestamp: pipeline.timestamp,
       date: pipelineDate,
       time: {

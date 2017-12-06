@@ -15,6 +15,8 @@ exports.run = function (pipeline, options={}) {
     });
   }
 
+  pipeline.processedConfig = config;
+
   // run origin
   if (!pipeline.origin || !pipeline.origin.runner) {
     console.warn('[Pipeline] this pipeline does not have an origin or an origin runner')

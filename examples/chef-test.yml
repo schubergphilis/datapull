@@ -30,14 +30,14 @@ collect:
 
 push-to-kinesis:
   runner: aws-destination.Kinesis.putRecords
-  stream: "public-cloud-records"
+  stream: ${env.TARGET_KINESIS_STREAM}
   region: "eu-west-1"
   partitionKey: "single-shard"
   accessKeyId: ${env.AWS_D_K}
   secretAccessKey: ${env.AWS_D_S}
   extendMessage:
     _meta:
-      eventType: "public-cloud-records"
+      eventType: "chef.node.update"
       producedBy: "datapull.v1"
       timestamp: ${pipeline.timestamp}
     period: ${pipeline.time.year}${pipeline.time.month}
@@ -45,5 +45,6 @@ push-to-kinesis:
     details:
       name: ${rawData.name}
       chefEnvironment: ${rawData.chef_environment}
+      chefOrg: ${pipeline.config.processed.apiUrl}
       cpu:
         total: ${JSON.stringify(rawData.automatic.cpu)}
