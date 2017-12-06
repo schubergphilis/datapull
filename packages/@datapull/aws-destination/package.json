@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@datapull/json-config": "^0.0.13",
-    "aws-sdk": "^2.146.0"
+    "aws-sdk": "^2.146.0",
+    "bottleneck": "^1.16.0"
   }
 }
