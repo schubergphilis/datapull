@@ -3,9 +3,10 @@ class MapTransformer {
     this.config = config;
   }
   transform(data) {
+    let r = [];
+
     // take all the keys of all the objects in the item and return them as a list of { _key: key, _value: value} pairs
     if (this.config === 'objectKeysValuesToList') {
-      const r = [];
 
       data.forEach(item => {
         Object.keys(item).map(k => {
@@ -14,8 +15,11 @@ class MapTransformer {
           r.push(transformedItem);
         });
       });
-
       return Promise.resolve(r);
+    }
+
+    if (this.config === 'mergeArrays') {
+      return Promise.resolve([].concat(...data));
     }
 
     throw Error(`Unsupported map method: ${this.config}`);

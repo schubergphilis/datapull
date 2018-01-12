@@ -1,0 +1,40 @@
+name: generic-data
+
+description: Collects data from a HTTP API, secured by basic auth
+
+collect:
+  runner: http-api-origin
+  auth: custom
+  customAuth:
+    method: "post"
+    hostname: ${env.AUTH_HOST}
+    path: ${env.AUTH_PATH}
+    format: "json"
+    headers:
+      'Content-Type': "application/xml"
+      Accept: "application/json"
+    body: ${env.AUTH_BODY}
+    secretKey: 'token'
+  method: "get"
+  url: ${env.URL}
+  format: "json"
+  headers:
+    Authtoken: 'customAuth.credentials'
+  transform:
+    - jsonpath: $.response.docs
+    - map: 'mergeArrays'
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  region: "eu-west-1"
+  partitionKey: "single-shard"
+  accessKeyId: ${env.AWS_D_K}
+  secretAccessKey: ${env.AWS_D_S}
+  extendMessage:
+    _meta:
+      eventType: "public-cloud-records"
+      producedBy: "datapull.v1"
+      timestamp: ${pipeline.timestamp}
+    quantity: ${rawData.quantityField}
+    details: ${data}

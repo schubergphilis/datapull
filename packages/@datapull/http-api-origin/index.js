@@ -26,10 +26,80 @@ class HttpApiOrigin {
     };
   }
 
+  async customAuth(config) {
+    return new Promise((resolve, reject) => {
+      if (config.auth !== 'custom') {
+        return resolve();
+      }
+
+
+      const options = {
+        hostname: config.customAuth.hostname,
+        port: config.customAuth.port || 443,
+        path: config.customAuth.path,
+        method: config.customAuth.method
+      };
+
+      if (config.customAuth.headers) {
+        options.headers = config.customAuth.headers;
+      }
+
+      const req = http.request(options, (res) => {
+        const {statusCode} = res;
+
+        if (statusCode !== 200) {
+          res.resume(); // consume response data to free up memory
+          return reject(new Error(`Request Failed. Status Code: ${statusCode}`));
+        }
+
+        res.setEncoding('utf8');
+        let rawData = '';
+        res.on('data', (chunk) => {
+          rawData += chunk;
+        });
+        res.on('end', () => {
+          try {
+            let parsedData = rawData;
+            if (config.customAuth.format === 'json') {
+              parsedData = JSON.parse(rawData);
+            }
+
+            if (config.customAuth.secretKey) {
+              parsedData = parsedData[config.customAuth.secretKey];
+            }
+
+            if (!parsedData) {
+              return reject(new Error("Could not get credentials (custom auth)"));
+            }
+
+            resolve(parsedData);
+          } catch (e) {
+            reject(e);
+          }
+        });
+      });
+
+      req.on('error', (e) => {
+        reject(e);
+      });
+
+      // write data to request body
+      req.write(config.customAuth.body || '');
+      req.end();
+    });
+
+  }
+
   pullData(config) {
     console.log('[HTTP Origin] fetching', this.method, this.url);
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      let credentials;
+      try {
+        credentials = await this.customAuth(this.config);
+      } catch (err) {
+        reject(err);
+      }
 
       const options = {
         hostname: this.url.hostname,
@@ -48,22 +118,27 @@ class HttpApiOrigin {
         options.auth = `${config.username}:${config.password}`;
       }
 
+      if (this.config.headers) {
+        options.headers = {};
+        for (let k of Object.keys(this.config.headers)) {
+          const value = this.config.headers[k];
+          options.headers[k] = String(value).replace('customAuth.credentials', credentials);
+        }
+      }
+
       const req = http.request(options, (res) => {
         const {statusCode} = res;
 
-        let error;
         if (statusCode !== 200) {
-          error = `Request Failed. Status Code: ${statusCode}`;
-        }
-
-        if (error) {
           res.resume(); // consume response data to free up memory
-          return reject(error);
+          return reject(new Error(`Request Failed. Status Code: ${statusCode}`));
         }
 
         res.setEncoding('utf8');
         let rawData = '';
-        res.on('data', (chunk) => { rawData += chunk; });
+        res.on('data', (chunk) => {
+          rawData += chunk;
+        });
         res.on('end', () => {
           try {
             let parsedData = rawData;
