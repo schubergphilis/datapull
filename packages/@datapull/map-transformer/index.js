@@ -19,8 +19,7 @@ class MapTransformer {
     }
 
     if (this.config === 'mergeArrays') {
-      r = [].concat.apply([], data);
-      return Promise.resolve(r);
+      return Promise.resolve([].concat(...data));
     }
 
     throw Error(`Unsupported map method: ${this.config}`);

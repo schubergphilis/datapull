@@ -47,14 +47,9 @@ class HttpApiOrigin {
       const req = http.request(options, (res) => {
         const {statusCode} = res;
 
-        let error;
         if (statusCode !== 200) {
-          error = `Request Failed. Status Code: ${statusCode}`;
-        }
-
-        if (error) {
           res.resume(); // consume response data to free up memory
-          return reject(error);
+          return reject(new Error(`Request Failed. Status Code: ${statusCode}`));
         }
 
         res.setEncoding('utf8');
@@ -74,7 +69,7 @@ class HttpApiOrigin {
             }
 
             if (!parsedData) {
-              return reject("Could not get credentials (custom auth)");
+              return reject(new Error("Could not get credentials (custom auth)"));
             }
 
             resolve(parsedData);
@@ -125,23 +120,18 @@ class HttpApiOrigin {
 
       if (this.config.headers) {
         options.headers = {};
-        Object.keys(this.config.headers).forEach(k => {
+        for (let k of Object.keys(this.config.headers)) {
           const value = this.config.headers[k];
           options.headers[k] = String(value).replace('customAuth.credentials', credentials);
-        });
+        }
       }
 
       const req = http.request(options, (res) => {
         const {statusCode} = res;
 
-        let error;
         if (statusCode !== 200) {
-          error = `Request Failed. Status Code: ${statusCode}`;
-        }
-
-        if (error) {
           res.resume(); // consume response data to free up memory
-          return reject(error);
+          return reject(new Error(`Request Failed. Status Code: ${statusCode}`));
         }
 
         res.setEncoding('utf8');
