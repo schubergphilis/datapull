@@ -10,26 +10,6 @@ configure-aws-accounts:
         secretAccessKey: ${env.AWS_ACCOUNT1_S}
         extendMessage:
           account: "redapple.acceptance"
-    - development:
-        accessKeyId: ${env.AWS_ACCOUNT2_K}
-        secretAccessKey: ${env.AWS_ACCOUNT2_S}
-        extendMessage:
-          account: "redapple.development"
-    - production:
-        accessKeyId: ${env.AWS_ACCOUNT3_K}
-        secretAccessKey: ${env.AWS_ACCOUNT3_S}
-        extendMessage:
-          account: "redapple.production"
-    - services:
-        accessKeyId: ${env.AWS_ACCOUNT4_K}
-        secretAccessKey: ${env.AWS_ACCOUNT4_S}
-        extendMessage:
-          account: "redapple.services"
-    - testing:
-        accessKeyId: ${env.AWS_ACCOUNT5_K}
-        secretAccessKey: ${env.AWS_ACCOUNT5_S}
-        extendMessage:
-          account: "redapple.testing"
 
 configure-aws-regions:
   runner: json-config
@@ -38,6 +18,10 @@ configure-aws-regions:
         region: eu-west-1
         extendMessage:
           region: eu-west-1
+    - london:
+        region: eu-west-2
+        extendMessage:
+          region: eu-west-2
     - frankfurt:
         region: eu-central-1
         extendMessage:
@@ -45,8 +29,11 @@ configure-aws-regions:
 
 collect-acm-certificates:
   runner: aws-origin.ACM.listCertificates
-  transform:
-    - jsonpath: $.CertificateSummaryList.*
+  awsDetailsCall:
+    itemsListKey: "CertificateSummaryList"
+    itemKey: "CertificateArn"
+    method: ACM.describeCertificate
+    keyParam: "CertificateArn"
   extendMessage:
     resource: "aws.acm.certificate"
 
@@ -65,4 +52,5 @@ push-to-kinesis:
       timestamp: ${pipeline.timestamp}
     quantity: 1
     period: ${pipeline.time.year}${pipeline.time.month}
-    details: ${data}
+    inUseBy: ${rawData.Certificate.InUseBy}
+    status: ${rawData.Certificate.Status}

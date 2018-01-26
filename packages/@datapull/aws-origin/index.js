@@ -49,15 +49,91 @@ class AwsOrigin {
     console.log('[AWS Origin] params', params);
 
     return new Promise((resolve, reject) => {
-      serviceClient[this.config.method].call(serviceClient, params, (err, resp) => {
+      serviceClient[this.config.method].call(serviceClient, params, async (err, resp) => {
         if (err) {
           console.error('[AWS Origin] ERROR ', err);
           return reject(err);
         }
 
-        resolve(resp);
+        if (!this.config.awsDetailsCall) {
+          return resolve(resp);
+        }
+
+        // For every item in the response, make a details call:
+        try {
+          const details = await this.pullDataFromDetailsCall(this.config.awsDetailsCall, config, resp);
+          return resolve(details);
+        } catch (err) {
+          reject(err);
+        }
       });
     });
+  }
+
+  async pullDataFromDetailsCall(detailsCallConfig, clientConfig, listCallResponse) {
+    if (!detailsCallConfig.itemsListKey) {
+      throw Error("[AWS Origin] Please specify `itemsListKey` in `awsDetailsCall`");
+    }
+    if (!detailsCallConfig.itemKey) {
+      throw Error("[AWS Origin] Please specify `itemKey` in `awsDetailsCall`");
+    }
+    if (!detailsCallConfig.method) {
+      throw Error("[AWS Origin] Please specify `method` in `awsDetailsCall`");
+    }
+    if (!detailsCallConfig.keyParam) {
+      throw Error("[AWS Origin] Please specify `method` in `awsDetailsCall`");
+    }
+
+    const items = listCallResponse[detailsCallConfig.itemsListKey];
+    if (!Array.isArray(items)) {
+      throw Error("[AWS Origin] Could not get a list of items to make details call");
+    }
+
+    const keys = items.map(i => i[detailsCallConfig.itemKey]).filter(i => i);
+
+    if (keys.length === 0) {
+      console.warn("[AWS Origin] Details call won't be done because 0 items are found in the list call response")
+      return [];
+    }
+
+    const runnerParts = detailsCallConfig.method.split('.');
+    if (runnerParts.length < 2) {
+      throw Error("[AWS Origin] `method` in `awsDetailsCall` should specify name of the service and name of the method for a details call");
+    }
+
+    const DetailsService = aws[runnerParts[0]];
+    if (!DetailsService) {
+      throw Error("[AWS Origin] no service found to make a details call: " + runnerParts[0]);
+    }
+
+    const detailsMethod = runnerParts[1];
+
+    const detailsServiceClient = new DetailsService(clientConfig);
+
+
+
+    const detailCalls = keys.map(k => {
+      return new Promise((detailsCallResolve, detailsCallReject) => {
+        detailsServiceClient[detailsMethod].call(detailsServiceClient, {
+          [detailsCallConfig.keyParam]: k
+        }, (err, resp) => {
+          if (err) {
+            console.error('[AWS Origin] Details call ERROR ', err);
+            return detailsCallReject(err);
+          }
+
+          detailsCallResolve(resp)
+        })
+      });
+    });
+
+    try {
+      const responses = await Promise.all(detailCalls);
+      return responses;
+    } catch (err) {
+      console.error("[AWS Origin] One or all of details call failed", err);
+      throw err;
+    }
   }
 }
 
