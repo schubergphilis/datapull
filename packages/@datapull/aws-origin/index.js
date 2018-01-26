@@ -64,7 +64,7 @@ class AwsOrigin {
           const details = await this.pullDataFromDetailsCall(this.config.awsDetailsCall, config, resp);
           return resolve(details);
         } catch (err) {
-          reject(err);
+          return reject(err);
         }
       });
     });
@@ -82,7 +82,7 @@ class AwsOrigin {
       throw Error("[AWS Origin] Please specify `method` in `awsDetailsCall`");
     }
     if (!detailsCallConfig.keyParam) {
-      throw Error("[AWS Origin] Please specify `method` in `awsDetailsCall`");
+      throw Error("[AWS Origin] Please specify `keyParam` in `awsDetailsCall`");
     }
 
     // get the item keys from list call:
