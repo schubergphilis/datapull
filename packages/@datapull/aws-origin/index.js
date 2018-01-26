@@ -71,6 +71,7 @@ class AwsOrigin {
   }
 
   async pullDataFromDetailsCall(detailsCallConfig, clientConfig, listCallResponse) {
+    // validate the config:
     if (!detailsCallConfig.itemsListKey) {
       throw Error("[AWS Origin] Please specify `itemsListKey` in `awsDetailsCall`");
     }
@@ -84,6 +85,7 @@ class AwsOrigin {
       throw Error("[AWS Origin] Please specify `method` in `awsDetailsCall`");
     }
 
+    // get the item keys from list call:
     const items = listCallResponse[detailsCallConfig.itemsListKey];
     if (!Array.isArray(items)) {
       throw Error("[AWS Origin] Could not get a list of items to make details call");
@@ -96,6 +98,7 @@ class AwsOrigin {
       return [];
     }
 
+    // configure the aws client
     const runnerParts = detailsCallConfig.method.split('.');
     if (runnerParts.length < 2) {
       throw Error("[AWS Origin] `method` in `awsDetailsCall` should specify name of the service and name of the method for a details call");
@@ -107,11 +110,9 @@ class AwsOrigin {
     }
 
     const detailsMethod = runnerParts[1];
-
     const detailsServiceClient = new DetailsService(clientConfig);
 
-
-
+    // make the calls
     const detailCalls = keys.map(k => {
       return new Promise((detailsCallResolve, detailsCallReject) => {
         detailsServiceClient[detailsMethod].call(detailsServiceClient, {
@@ -127,6 +128,7 @@ class AwsOrigin {
       });
     });
 
+    // wait for every call to resolve
     try {
       const responses = await Promise.all(detailCalls);
       return responses;
