@@ -5,12 +5,24 @@ class MapTransformer {
   transform(data) {
     let r = [];
 
+    const method = this.config.method || this.config;
+
     // take all the keys of all the objects in the item and return them as a list of { _key: key, _value: value} pairs
-    if (this.config === 'objectKeysValuesToList') {
+    if (method === 'objectKeysValuesToList') {
 
       data.forEach(item => {
         Object.keys(item).map(k => {
-          return { _key: k, _value: item[k]};
+          const r = { _key: k, _value: item[k]};
+
+          if (this.config.keepKeys) {
+            const keptEntries = Object.entries(item)
+              .filter(([key]) => this.config.keepKeys.includes(key))
+              .reduce((obj, [key, val]) => Object.assign(obj, { [key]: val }), {});
+
+            Object.assign(r, keptEntries);
+          }
+
+          return r;
         }).forEach(transformedItem => {
           r.push(transformedItem);
         });
@@ -18,11 +30,11 @@ class MapTransformer {
       return Promise.resolve(r);
     }
 
-    if (this.config === 'mergeArrays') {
+    if (method === 'mergeArrays') {
       return Promise.resolve([].concat(...data));
     }
 
-    throw Error(`Unsupported map method: ${this.config}`);
+    throw Error(`Unsupported map method: ${method}`);
   }
 }
 

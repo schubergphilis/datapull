@@ -1,0 +1,49 @@
+name: okta-users-data
+
+description: Collects data from InfluxDB and pushes it to Kinesis
+
+config-source-tables:
+  runner: json-config
+  items:
+    - t1:
+        tableName: table1
+    - t2:
+        tableName: table2
+
+collect-influx:
+  runner: influx-origin
+  endpoint: ${env.INFLUX_ENDPOINT}
+  port: ${env.INFLUX_PORT}
+  database: ${env.INFLUX_DATABASE}
+  username: ${env.INFLUX_USER}
+  password: ${env.INFLUX_PASSWORD}
+  queryTemplate: ${env.QUERY_TEMPLATE}
+  transform:
+    - map:
+        method: objectKeysValuesToList
+        keepKeys:
+          - time
+    - filter:
+        value: $._key
+        condition: isNot:time
+    - filter:
+        value: $._value
+        condition: isNumeric
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  region: "eu-west-1"
+  partitionKey: "single-shard"
+  accessKeyId: ${env.AWS_D_K}
+  secretAccessKey: ${env.AWS_D_S}
+  extendMessage:
+    _meta:
+      eventType: "public-cloud-records"
+      producedBy: "datapull.v1"
+      timestamp: ${pipeline.timestamp}
+    period: ${pipeline.time.year}${pipeline.time.month}
+    resource: ${rawData._key}
+    quantity: ${rawData._value}
+    details:
+      time: ${rawData.time.toISOString()}

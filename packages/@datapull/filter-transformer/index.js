@@ -11,12 +11,16 @@ class MapTransformer {
         return reject("No filter condition is specified in filter transformer");
       }
 
+      // parse the condition name / condition arguments
+      const configConditionsParts = String(this.config.condition).split(':');
+      const configCondition = configConditionsParts.shift();
+
       const conditions = this.conditions();
-      if (!conditions[this.config.condition]) {
-        return reject(`No known filter condition: ${this.config.condition}`);
+      if (!conditions[configCondition]) {
+        return reject(`No known filter condition: ${configCondition}`);
       }
 
-      const conditionMethod = conditions[this.config.condition].bind(this);
+      const conditionMethod = conditions[configCondition].bind(this);
 
       // filter the items:
       const r = data.filter(item => {
@@ -26,11 +30,11 @@ class MapTransformer {
           if (value.length === 0) {
             return false; // this should not be in the resulting data set
           }
-          return conditionMethod(value[0]);
+          return conditionMethod(value[0], configConditionsParts);
         }
 
         // apply the condition to the whole item:
-        return conditionMethod(item);
+        return conditionMethod(item, configConditionsParts);
       });
 
       resolve(r);
@@ -41,6 +45,9 @@ class MapTransformer {
     return {
       isNumeric(value) {
         return require('./conditions/is-numeric').isNumeric(value);
+      },
+      isNot(value, isNotValue) {
+        return require('./conditions/is-not').isNot(value, isNotValue);
       }
     };
   }

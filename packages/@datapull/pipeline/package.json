@@ -28,6 +28,7 @@
     "@datapull/map-transformer": "^0.0.20",
     "@datapull/okta-origin": "^0.0.15",
     "@datapull/reduce-transformer": "^0.0.13",
-    "@datapull/splunk-origin": "^0.0.13"
+    "@datapull/splunk-origin": "^0.0.13",
+    "@datapull/influx-origin": "^0.0.15"
   }
 }
