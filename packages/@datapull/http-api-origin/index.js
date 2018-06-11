@@ -1,4 +1,5 @@
 const http = require('https');
+const qs = require('querystring');
 const processConfig = require('@datapull/json-config').processConfig;
 const url = require('url');
 
@@ -107,6 +108,10 @@ class HttpApiOrigin {
         path: this.url.path,
         method: this.method
       };
+
+      if (this.config.queryParams) {
+        options.path += `?${qs.stringify(this.config.queryParams)}`;
+      }
 
       if (this.config.auth === 'basic') {
         if (!config.username) {
