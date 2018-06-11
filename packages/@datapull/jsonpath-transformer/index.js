@@ -6,7 +6,6 @@ class JsonPathTransformer {
   }
   transform(data) {
     const selectedData = jp.query(data, this.config);
-    // console.log('[JsonPathTransformer]', JSON.stringify(selectedData));
     return Promise.resolve(selectedData);
   }
 }

@@ -28,6 +28,7 @@ exports.run = function (pipeline, options={}) {
       throw err;
     })
     .then(resp => {
+      pipeline.originRawData = resp;
       console.log(`[Pipeline] starting to transform data with ${pipeline.transformers.length} transformers`);
 
       return new Promise((resolve, reject) => {

@@ -1,0 +1,32 @@
+name: aws-data
+
+description: Collects AWS Orginizations from AWS API
+
+configure-aws-accounts:
+  runner: json-config
+  items:
+    - acceptance:
+        accessKeyId: ${env.AWS_ACCOUNT1_K}
+        secretAccessKey: ${env.AWS_ACCOUNT1_S}
+
+configure-aws-regions:
+  runner: json-config
+  items:
+    - us-east:
+        region: us-east-1
+
+collect-costs:
+  runner: aws-origin.Organizations.listAccounts
+  transform:
+    - jsonpath: $.Accounts.*
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  accessKeyId: ${env.AWS_D_K}
+  secretAccessKey: ${env.AWS_D_S}
+  region: eu-west-1
+  partitionKey: "single-shard"
+
+  extendMessage:
+    detail: ${data}

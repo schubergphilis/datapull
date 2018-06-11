@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@datapull/aws-destination": "^0.0.19",
+    "@datapull/aws-costexplorer-origin": "^0.0.21",
     "@datapull/aws-origin": "^0.0.21",
     "@datapull/chef-origin": "^0.0.17",
     "@datapull/filter-transformer": "^0.0.22",
