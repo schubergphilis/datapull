@@ -1,0 +1,42 @@
+name: aws-data
+
+description: Collects AWS Costs from Cost Explorer
+
+configure-aws-accounts:
+  runner: json-config
+  items:
+    - acceptance:
+        accessKeyId: ${env.AWS_ACCOUNT1_K}
+        secretAccessKey: ${env.AWS_ACCOUNT1_S}
+
+collect-costs:
+  runner: aws-costexplorer-origin.getCostAndUsage
+  costQueryParams:
+    Granularity: 'MONTHLY'
+    Metrics:
+      - 'BlendedCost'
+      - 'UnblendedCost'
+    GroupBy:
+      - Type: 'DIMENSION'
+        Key: 'LINKED_ACCOUNT'
+    TimePeriod:
+      Start: '2018-03-01'
+      End: '2018-04-01'
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  accessKeyId: ${env.AWS_D_K}
+  secretAccessKey: ${env.AWS_D_S}
+  region: eu-west-1
+  partitionKey: "single-shard"
+
+  extendMessage:
+    _meta:
+      eventType: "public-cloud-records"
+      producedBy: "datapull.v1"
+      timestamp: ${pipeline.timestamp}
+    quantity: 1
+    period: ${pipeline.time.year}${pipeline.time.month}
+    inUseBy: ${rawData.Certificate.InUseBy}
+    status: ${rawData.Certificate.Status}

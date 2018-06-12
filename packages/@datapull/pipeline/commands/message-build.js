@@ -22,7 +22,7 @@ exports.buildMessage = function (messageTemplate, pipeline, data) {
         month: pad(String(pipelineDate.getMonth() + 1), 2, '0')
       }
     }
-  }, {data: dataString}, {rawData: data});
+  }, {data: dataString}, {rawData: data}, {originRawData: pipeline.originRawData});
 
   const templateSettings = {
     interpolate: /\${([\s\S]+?)}/g,

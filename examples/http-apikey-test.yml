@@ -1,0 +1,28 @@
+name: generic-data
+
+description: Collects data from a HTTP API (datadog API example)
+
+collect:
+  runner: http-api-origin
+  method: "get"
+  url: ${env.URL}
+  queryParams:
+    api_key: ${env.API_KEY}
+    application_key: ${env.APP_KEY}
+    start_month: "2018-05"
+    end_month: "2018-06"
+    include_org_details: "true"
+  format: "json"
+  transform:
+    - jsonpath: $.usage.0.orgs.*
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  region: "eu-west-1"
+  partitionKey: "single-shard"
+  accessKeyId: ${env.AWS_D_K}
+  secretAccessKey: ${env.AWS_D_S}
+  extendMessage:
+    period: ${originRawData.usage[0].date}
+    details: ${data}
