@@ -1,8 +1,14 @@
+const processConfig = require('@datapull/json-config').processConfig;
 const aws = require('aws-sdk');
 
-class AwsOrigin {
+class AwsCostExplorerOrigin {
   constructor(config) {
-    this.config = config;
+    // replace variables in the config:
+    try {
+      this.config = processConfig(config);
+    } catch (err) {
+      throw Error(`Could not parse config of AwsCostExplorer origin ${err}`);
+    }
   }
 
   get originDeclaration() {
@@ -34,5 +40,5 @@ class AwsOrigin {
 
 exports.datapullStep = {
   isOrigin: true,
-  constructor: AwsOrigin
+  constructor: AwsCostExplorerOrigin
 };

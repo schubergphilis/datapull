@@ -1,4 +1,5 @@
 const buildMessage = require('./message-build').buildMessage;
+const uuidv4 = require('uuid/v4');
 
 exports.run = function (pipeline, options={}) {
   // prepare config:
@@ -6,6 +7,10 @@ exports.run = function (pipeline, options={}) {
 
   if (!pipeline.timestamp) {
     pipeline.timestamp = Date.now();
+  }
+
+  if (!pipeline.timestamp) {
+    pipeline.uuid = uuidv4();
   }
 
   if (pipeline.configProcessors) {
