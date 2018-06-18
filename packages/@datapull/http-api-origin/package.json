@@ -1,6 +1,6 @@
 {
   "name": "@datapull/http-api-origin",
-  "version": "0.0.20",
+  "version": "0.1.0",
   "description": "Data origin for Datapull: pull data from a service that exposes it through an HTTP API",
   "main": "index.js",
   "scripts": {
