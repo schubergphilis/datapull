@@ -1,9 +1,14 @@
 const template = require('lodash/template');
 const pad = require('lodash/padStart');
+const moment = require('moment');
+const uuidv4 = require('uuid/v4');
 
 exports.buildMessage = function (messageTemplate, pipeline, data) {
   if (!pipeline.timestamp) {
     pipeline.timestamp = Date.now();
+  }
+  if (!pipeline.uuid) {
+    pipeline.uuid = uuidv4();
   }
 
   const pipelineDate = new Date(pipeline.timestamp);
@@ -16,12 +21,15 @@ exports.buildMessage = function (messageTemplate, pipeline, data) {
         processed: pipeline.processedConfig
       },
       timestamp: pipeline.timestamp,
+      uuid: pipeline.uuid,
       date: pipelineDate,
       time: {
         year: pipelineDate.getFullYear(),
         month: pad(String(pipelineDate.getMonth() + 1), 2, '0')
       }
-    }
+    },
+    moment: moment,
+    uuidv4: uuidv4
   }, {data: dataString}, {rawData: data}, {originRawData: pipeline.originRawData});
 
   const templateSettings = {
@@ -42,6 +50,14 @@ exports.buildMessage = function (messageTemplate, pipeline, data) {
           // check for numeric values:
           if (!isNaN(r[k])) {
             r[k] = Number(r[k]);
+          }
+
+          // check for boolean values:
+          if (r[k] === 'true') {
+            r[k] = true;
+          }
+          if (r[k] === 'false') {
+            r[k] = false;
           }
 
           // check if the value is json parseable:

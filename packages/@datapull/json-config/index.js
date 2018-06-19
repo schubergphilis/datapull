@@ -1,11 +1,13 @@
 const deepMap = require('deep-map');
 const template = require('lodash/template');
+const moment = require('moment');
 
 // replaces variables in config objects:
 function processConfig(config) {
   console.log('[JsonConfig] replace variables with ENV variables if needed');
   const data = {
-    env: process.env
+    env: process.env,
+    moment: moment
   };
   return deepMap(config, value => template(value, {
     interpolate: /\${([\s\S]+?)}/g,

@@ -12,6 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "aws-sdk": "^2.252.1"
+    "aws-sdk": "^2.252.1",
+    "@datapull/json-config": "^0.0.13"
   }
 }

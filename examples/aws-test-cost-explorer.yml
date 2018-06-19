@@ -20,8 +20,15 @@ collect-costs:
       - Type: 'DIMENSION'
         Key: 'LINKED_ACCOUNT'
     TimePeriod:
-      Start: '2018-03-01'
-      End: '2018-04-01'
+      Start: ${moment().add(-1, 'month').startOf('month').format('YYYY-MM-DD')}
+      End: ${moment().add(1, 'month').startOf('month').format('YYYY-MM-DD')}
+  transform:
+    - jsonpath-flatlist:
+        query: $.ResultsByTime.*.Groups.*
+        captureParentFields:
+          - TimePeriod
+          - Estimated
+
 
 push-to-kinesis:
   runner: aws-destination.Kinesis.putRecords
@@ -36,7 +43,14 @@ push-to-kinesis:
       eventType: "public-cloud-records"
       producedBy: "datapull.v1"
       timestamp: ${pipeline.timestamp}
-    quantity: 1
-    period: ${pipeline.time.year}${pipeline.time.month}
-    inUseBy: ${rawData.Certificate.InUseBy}
-    status: ${rawData.Certificate.Status}
+      batchId: ${pipeline.uuid}
+      messageId: ${uuidv4()}
+
+    billingPeriod: ${moment(rawData.TimePeriod.Start).format('YYYYMM')}
+    start: ${rawData.TimePeriod.Start}
+    end: ${rawData.TimePeriod.End}
+    estimated: ${rawData.Estimated}
+
+    account: ${rawData.Keys[0]}
+    amount: ${rawData.Metrics.BlendedCost.Amount}
+    currency: ${rawData.Metrics.BlendedCost.Unit}
