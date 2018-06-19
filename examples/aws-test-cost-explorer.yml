@@ -49,7 +49,7 @@ push-to-kinesis:
     billingPeriod: ${moment(rawData.TimePeriod.Start).format('YYYYMM')}
     start: ${rawData.TimePeriod.Start}
     end: ${rawData.TimePeriod.End}
-    estimated: ${Boolean(rawData.Estimated)}
+    estimated: ${rawData.Estimated}
 
     account: ${rawData.Keys[0]}
     amount: ${rawData.Metrics.BlendedCost.Amount}

@@ -52,6 +52,14 @@ exports.buildMessage = function (messageTemplate, pipeline, data) {
             r[k] = Number(r[k]);
           }
 
+          // check for boolean values:
+          if (r[k] === 'true') {
+            r[k] = true;
+          }
+          if (r[k] === 'false') {
+            r[k] = false;
+          }
+
           // check if the value is json parseable:
           if (typeof r[k] === 'string' && r[k].startsWith("{") && r[k].endsWith("}")) {
             try {
