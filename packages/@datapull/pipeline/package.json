@@ -1,6 +1,6 @@
 {
   "name": "@datapull/pipeline",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pipeline reads a yaml file with pipeline declaration, builds a plan for the given pipeline and runs it",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@datapull/json-config": "^0.0.13",
+    "@datapull/json-config": "^0.1.1",
     "deepcopy": "^0.6.3",
     "js-yaml": "^3.10.0",
     "lodash": "^4.17.4",
@@ -20,16 +20,16 @@
     "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "@datapull/aws-costexplorer-origin": "^0.1.0",
-    "@datapull/aws-destination": "^0.0.19",
+    "@datapull/aws-costexplorer-origin": "^0.1.1",
+    "@datapull/aws-destination": "^0.1.1",
     "@datapull/aws-origin": "^0.0.21",
     "@datapull/chef-origin": "^0.0.17",
     "@datapull/filter-transformer": "^0.0.22",
-    "@datapull/http-api-origin": "^0.1.0",
+    "@datapull/http-api-origin": "^0.1.1",
     "@datapull/influx-origin": "^0.0.22",
-    "@datapull/json-config": "^0.0.13",
+    "@datapull/json-config": "^0.1.1",
+    "@datapull/jsonpath-flatlist-transformer": "^0.1.1",
     "@datapull/jsonpath-transformer": "^0.1.0",
-    "@datapull/jsonpath-flatlist-transformer": "^0.1.0",
     "@datapull/map-transformer": "^0.0.22",
     "@datapull/okta-origin": "^0.0.15",
     "@datapull/reduce-transformer": "^0.0.13",
