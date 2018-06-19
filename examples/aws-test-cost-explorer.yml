@@ -23,13 +23,11 @@ collect-costs:
       Start: ${moment().add(-1, 'month').startOf('month').format('YYYY-MM-DD')}
       End: ${moment().add(1, 'month').startOf('month').format('YYYY-MM-DD')}
   transform:
-    - jsonpath-multistep:
-        steps:
-          - query: $.ResultsByTime.*
-          - query: $.Groups.*
-            captureFromPreviousStep:
-              TimePeriod: $.TimePeriod
-              Estimated: $.Estimated
+    - jsonpath-flatlist:
+        query: $.ResultsByTime.*.Groups.*
+        captureParentFields:
+          - TimePeriod
+          - Estimated
 
 
 push-to-kinesis:
