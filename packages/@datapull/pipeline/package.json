@@ -32,6 +32,7 @@
     "@datapull/jsonpath-transformer": "^0.1.0",
     "@datapull/map-transformer": "^0.0.22",
     "@datapull/okta-origin": "^0.0.15",
+    "@datapull/redshift-destination": "^0.1.1",
     "@datapull/reduce-transformer": "^0.0.13",
     "@datapull/splunk-origin": "^0.0.13"
   }

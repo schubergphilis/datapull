@@ -28,7 +28,6 @@ class AwsCostExplorerOrigin {
     return new Promise(async (resolve, reject) => {
       try {
         const resp = await client.getCostAndUsage(this.config.costQueryParams).promise();
-        console.log('[AWS Cost Explorer Origin] response', JSON.stringify(resp));
         resolve(resp);
       } catch (err) {
         console.error('[AWS Cost Explorer Origin] ERROR ', err);

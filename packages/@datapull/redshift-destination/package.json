@@ -1,0 +1,18 @@
+{
+  "name": "@datapull/redshift-destination",
+  "version": "0.1.1",
+  "description": "Data destination for Datapull: push your data to Amazon Redshift",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anton Nekipelov <anton.nekipelov@gmail.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@datapull/json-config": "^0.1.1",
+    "pg": "^7.4.3"
+  }
+}

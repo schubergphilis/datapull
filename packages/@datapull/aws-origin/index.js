@@ -48,25 +48,55 @@ class AwsOrigin {
     }
     console.log('[AWS Origin] params', params);
 
-    return new Promise((resolve, reject) => {
-      serviceClient[this.config.method].call(serviceClient, params, async (err, resp) => {
-        if (err) {
-          console.error('[AWS Origin] ERROR ', err);
-          return reject(err);
-        }
-
-        if (!this.config.awsDetailsCall) {
-          return resolve(resp);
-        }
-
-        // For every item in the response, make a details call:
-        try {
-          const details = await this.pullDataFromDetailsCall(this.config.awsDetailsCall, config, resp);
-          return resolve(details);
-        } catch (err) {
-          return reject(err);
+    const mergeResults = (newResponse, prevResponse) => {
+      Object.keys(newResponse).forEach(key => {
+        if (Array.isArray(prevResponse[key]) && Array.isArray(newResponse[key])) {
+          newResponse[key] = newResponse[key].concat(prevResponse[key]);
         }
       });
+
+      return newResponse;
+    };
+
+    const countResults = (results) => {
+      let count = 0;
+      Object.keys(results).forEach(key => {
+        if (Array.isArray(results[key])) {
+          count += results[key].length;
+        }
+      });
+      return count;
+    };
+
+    const getAllInList = async (nextToken, results) => {
+      if (nextToken) {
+        params.NextToken = nextToken;
+      }
+
+      const resp = await serviceClient[this.config.method].call(serviceClient, params).promise();
+      const newResults = mergeResults(resp, results);
+      if (resp.NextToken) {
+        return await getAllInList(resp.NextToken, newResults);
+      }
+      return newResults;
+    };
+
+    return new Promise(async (resolve, reject) => {
+      const resp = await getAllInList(null, {});
+
+      console.log(`[AWS Origin] fetched ${countResults(resp)} results from ${this.config.service}.${this.config.method}`);
+
+      if (!this.config.awsDetailsCall) {
+        return resolve(resp);
+      }
+
+      // For every item in the response, make a details call:
+      try {
+        const details = await this.pullDataFromDetailsCall(this.config.awsDetailsCall, config, resp);
+        return resolve(details);
+      } catch (err) {
+        return reject(err);
+      }
     });
   }
 
