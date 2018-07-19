@@ -1,6 +1,6 @@
 {
   "name": "@datapull/redshift-destination",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Data destination for Datapull: push your data to Amazon Redshift",
   "main": "index.js",
   "scripts": {

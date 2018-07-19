@@ -1,6 +1,6 @@
 {
   "name": "@datapull/pipeline",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Pipeline reads a yaml file with pipeline declaration, builds a plan for the given pipeline and runs it",
   "main": "index.js",
   "scripts": {
@@ -20,9 +20,9 @@
     "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "@datapull/aws-costexplorer-origin": "^0.1.1",
+    "@datapull/aws-costexplorer-origin": "^0.1.2",
     "@datapull/aws-destination": "^0.1.1",
-    "@datapull/aws-origin": "^0.0.21",
+    "@datapull/aws-origin": "^0.1.2",
     "@datapull/chef-origin": "^0.0.17",
     "@datapull/filter-transformer": "^0.0.22",
     "@datapull/http-api-origin": "^0.1.1",
@@ -32,7 +32,7 @@
     "@datapull/jsonpath-transformer": "^0.1.0",
     "@datapull/map-transformer": "^0.0.22",
     "@datapull/okta-origin": "^0.0.15",
-    "@datapull/redshift-destination": "^0.1.1",
+    "@datapull/redshift-destination": "^0.1.2",
     "@datapull/reduce-transformer": "^0.0.13",
     "@datapull/splunk-origin": "^0.0.13"
   }
