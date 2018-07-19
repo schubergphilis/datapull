@@ -45,11 +45,9 @@ class RedshiftDestination {
     let insertCount = 0;
     let skipCount = 0;
 
-    for (let i in messages) {
-      if (!messages.hasOwnProperty(i)) {
-        break;
-      }
-      const m = messages[i];
+    await client.query('begin transaction read write');
+
+    for (let m of messages) {
       const keys = [];
       const placeholders = [];
       const values = [];
@@ -65,6 +63,7 @@ class RedshiftDestination {
         if (resp.rows[0].c > 0) {
           console.log(`[Redshift destination] Row with primary key ${m[this.config.primaryKey]} already exists in target table`);
           skipCount += 1;
+          await client.query('end transaction');
           continue;
         }
       }
@@ -74,6 +73,8 @@ class RedshiftDestination {
       const insert = await client.query(insertQuery, values);
       insertCount += insert.rowCount;
     }
+
+    await client.query('end transaction');
 
     console.log(`[Redshift destination] ${insertCount} row(s) inserted into ${this.config.table}. ${skipCount} message(s) skipped.`);
   }
