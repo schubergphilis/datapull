@@ -48,6 +48,16 @@ class AwsOrigin {
     }
     console.log('[AWS Origin] params', params);
 
+    /**
+     * AWS API doesn't have a unified results field in list responses.
+     * Instead it would output results in fields like Accounts or Instances.
+     * Here we just merge the results of two list responses together
+     * without knowing which field has the results in advance.
+     *
+     * @param newResponse
+     * @param prevResponse
+     * @returns {*}
+     */
     const mergeResults = (newResponse, prevResponse) => {
       Object.keys(newResponse).forEach(key => {
         if (Array.isArray(prevResponse[key]) && Array.isArray(newResponse[key])) {
