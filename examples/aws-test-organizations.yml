@@ -20,13 +20,21 @@ collect-costs:
   transform:
     - jsonpath: $.Accounts.*
 
-push-to-kinesis:
-  runner: aws-destination.Kinesis.putRecords
-  stream: "public-cloud-records"
-  accessKeyId: ${env.AWS_D_K}
-  secretAccessKey: ${env.AWS_D_S}
-  region: eu-west-1
-  partitionKey: "single-shard"
-
+push-to-redshift:
+  runner: redshift-destination.insertNewRows
+  host: ${env.REDSHIFT_HOST}
+  port: ${env.REDSHIFT_PORT}
+  database: ${env.REDSHIFT_DATABASE}
+  user: ${env.REDSHIFT_USER}
+  password: ${env.REDSHIFT_PASSWORD}
+  table: "public_cloud_records"
+  primaryKey: "id"
   extendMessage:
-    detail: ${data}
+    event_timestamp: ${(new Date(pipeline.timestamp)).toISOString()}
+    id: ${rawData.Id}
+    arn: ${rawData.Arn}
+    email: ${rawData.Email}
+    name: ${rawData.Name}
+    status: ${rawData.Active}
+    joined_method: ${rawData.JoinedMethod}
+    joined_timestamp: ${rawData.JoinedTimestamp}
