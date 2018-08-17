@@ -23,9 +23,7 @@ class BigQueryOrigin {
   pullData(pipelineConfig) {
     // merge step and pipeline configs:
     let mergedConfig = Object.assign(
-      {
-        // TODO: some defaults
-      },
+      {},
       pipelineConfig ? pipelineConfig.bigQuery || {} : {},
       this.config
     );
