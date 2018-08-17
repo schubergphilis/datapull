@@ -1,5 +1,6 @@
 const processConfig = require('@datapull/json-config').processConfig;
 const template = require('lodash/template');
+const BigQuery = require('@google-cloud/bigquery');
 
 
 class BigQueryOrigin {
@@ -30,12 +31,17 @@ class BigQueryOrigin {
     );
 
     // validate config:
-    if (!mergedConfig.query) {
-      throw Error('BigQuery Origin: query is not set up. Please specify `query` in the config');
+    if (!mergedConfig.projectId) {
+      throw Error('BigQuery Origin: projectId is not set up. Please specify `projectId` in the config');
+    }
+    if (!mergedConfig.queryTemplate) {
+      throw Error('BigQuery Origin: queryTemplate is not set up. Please specify `queryTemplate` in the config');
     }
 
     // build bigquery client:
-    const bq = ???; // TODO
+    const bq = new BigQuery({
+      projectId: mergedConfig.projectId,
+    });
 
 
     // prepare the query:
