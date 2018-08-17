@@ -56,9 +56,9 @@ class BigQueryOrigin {
 
     return bq.query(query)
       .catch(err => {
-      console.error('[BigQuery Origin]', err);
-      throw err;
-    })
+        console.error('[BigQuery Origin]', err);
+        throw err;
+      })
   }
 }
 
