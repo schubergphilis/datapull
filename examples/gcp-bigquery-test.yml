@@ -1,0 +1,20 @@
+name: generic-data
+
+description: Collects data from GCP BigQuery (note: you need to set up a GOOGLE_APPLICATION_CREDENTIALS env variable to point to your credentials.json file)
+
+collect:
+  runner: bigquery-origin
+  projectId: ${env.BQ_PROJECT_ID}
+  queryTemplate: ${env.QUERY}
+  transform:
+    - jsonpath: $.0.*
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  region: "eu-west-1"
+  partitionKey: "single-shard"
+  accessKeyId: ${env.AWS_D_K}
+  secretAccessKey: ${env.AWS_D_S}
+  extendMessage:
+    details: ${data}

@@ -9,8 +9,8 @@ collect:
   queryParams:
     api_key: ${env.API_KEY}
     application_key: ${env.APP_KEY}
-    start_month: "2018-05"
-    end_month: "2018-06"
+    start_month: ${moment().add(-1, 'month').format('YYYY-MM')}
+    end_month: ${moment().format('YYYY-MM')}
     include_org_details: "true"
   format: "json"
   transform:
