@@ -1,0 +1,34 @@
+name: mysql-data
+
+description: Collects data from MySQL and pushes it to Kinesis
+
+config-source-tables:
+  runner: json-config
+  items:
+    - t1:
+        tableName: table1
+    - t2:
+        tableName: table2
+
+collect-mysql:
+  runner: mysql-origin
+  host: ${env.MYSQL_HOST}
+  port: ${env.MYSQL_PORT}
+  database: ${env.MYSQL_DATABASE}
+  user: ${env.MYSQL_USER}
+  password: ${env.MYSQL_PASSWORD}
+  queryTemplate: ${env.QUERY_TEMPLATE}
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  region: "eu-west-1"
+  partitionKey: "single-shard"
+  accessKeyId: ${env.AWS_D_K}
+  secretAccessKey: ${env.AWS_D_S}
+  extendMessage:
+    _meta:
+      eventType: "public-cloud-records"
+      producedBy: "datapull.v1"
+      timestamp: ${pipeline.timestamp}
+    data: ${data}
