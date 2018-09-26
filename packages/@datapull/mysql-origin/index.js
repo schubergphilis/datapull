@@ -79,6 +79,17 @@ class MySQLOrigin {
           return reject(err);
         }
 
+        console.log('[mysql origin] closing connection now');
+        connection.end(function(err) {
+          if (err) {
+            console.error('[mysql origin] error closing connection gracefully', err);
+            connection.destroy();
+            console.log('[mysql origin] connection is destroyed');
+          }
+
+          console.log('[mysql origin] connection is closed');
+        });
+
         resolve(results);
       })
     });
