@@ -12,7 +12,7 @@ class Scheduler {
 
   launch(pipelines) {
     if (this.config.runImmediately) {
-      this.run(pipelines);
+      return this.run(pipelines);
     }
 
     if (this.config.runEveryXMinutes) {
@@ -52,6 +52,8 @@ class Scheduler {
     limiter.on('dropped', (dropped) => {
       console.warn(`[Pipelines Scheduler] Pipeline is dropped in schedule "${this.scheduleName}"`, dropped);
     });
+
+    return limiter;
   }
 }
 
