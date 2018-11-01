@@ -70,19 +70,6 @@ class AwsDestination {
         return resolve("Dry run");
       }
 
-      // validate the config
-      if (!this.config.accessKeyId) {
-        throw Error(`Destination API access key is empty`);
-      }
-
-      if (!this.config.secretAccessKey) {
-        throw Error(`Destination API secret key is empty`);
-      }
-
-      if (!this.config.region) {
-        return reject(`Destination region is not specified`);
-      }
-
       const sendToKinesis = (records) => {
         return new Promise((resolve, reject) => {
           console.log(`[AWS Destination] pushing ${params.Records.length} messages to aws (out of ${messages.length} total)`);
