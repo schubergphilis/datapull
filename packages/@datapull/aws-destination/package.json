@@ -1,6 +1,6 @@
 {
   "name": "@datapull/aws-destination",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Data destination for Datapull: send your data to AWS services",
   "main": "index.js",
   "scripts": {
