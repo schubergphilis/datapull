@@ -1,0 +1,66 @@
+name: aws-data
+
+description: Collects ECS instances
+
+configure-aws-accounts:
+  runner: json-config
+  items:
+    - acceptance:
+        accessKeyId: ${env.AWS_ACCOUNT1_K}
+        secretAccessKey: ${env.AWS_ACCOUNT1_S}
+        extendMessage:
+          account: "redapple.acceptance"
+
+configure-aws-regions:
+  runner: json-config
+  items:
+    - ireland:
+        region: eu-west-1
+        extendMessage:
+          region: eu-west-1
+
+collect-ecs-containerinstances:
+  runner: aws-origin.ECS.listClusters
+  awsDetailsCall:
+    itemsListKey: "clusterArns"
+    itemsAreStrings: true
+    method: ECS.listContainerInstances
+    keyParam: "cluster"
+    responseIsList: true
+  transform:
+    - jsonpath: $.*.containerInstanceArns.*
+  extendMessage:
+    resource: "aws.ecs.containerinstance"
+    resourceArn: ${JSON.parse(data)}
+
+collect-ecs-listServices:
+  runner: aws-origin.ECS.listClusters
+  awsDetailsCall:
+    itemsListKey: "clusterArns"
+    itemsAreStrings: true
+    method: ECS.listServices
+    keyParam: "cluster"
+    responseIsList: true
+  transform:
+    - jsonpath: $.*.serviceArns.*
+  extendMessage:
+    resource: "aws.ecs.service"
+    resourceArn: ${JSON.parse(data)}
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  accessKeyId: ${env.AWS_D_K}
+  secretAccessKey: ${env.AWS_D_S}
+  region: eu-west-1
+  partitionKey: "single-shard"
+
+  extendMessage:
+    _meta:
+      eventType: "public-cloud-records"
+      producedBy: "datapull.v1"
+      timestamp: ${pipeline.timestamp}
+    quantity: 1
+    period: ${pipeline.time.year}${pipeline.time.month}
+    details:
+      resourceArn: ${data}

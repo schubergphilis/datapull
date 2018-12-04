@@ -52,6 +52,8 @@ class AwsDestination {
       return Promise.resolve("No messages to push");
     }
 
+    console.log('[AWS Destination] ' + messages.length + ' message(s) to send');
+
     return new Promise((resolve, reject) => {
       const params = {};
 
@@ -63,7 +65,7 @@ class AwsDestination {
       }
 
       if (dryRun) {
-        console.log("[AwsDestination] Dry run: skipping sending messages");
+        console.log("[AWS Destination] Dry run: skipping sending messages.");
         params.Records.forEach(r => {
           console.log(r);
         });
