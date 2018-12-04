@@ -1,6 +1,6 @@
 {
   "name": "@datapull/filter-transformer",
-  "version": "0.1.3",
+  "version": "0.3.0",
   "description": "Data transformer for Datapull: filter data that match a given condition",
   "main": "index.js",
   "scripts": {

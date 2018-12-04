@@ -1,6 +1,6 @@
 {
   "name": "@datapull/bigquery-origin",
-  "version": "0.1.4",
+  "version": "0.3.0",
   "description": "Data origin for GCP BigQuery: pull data from BigQuery",
   "main": "index.js",
   "scripts": {

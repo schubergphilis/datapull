@@ -1,6 +1,6 @@
 {
   "name": "@datapull/aws-costexplorer-origin",
-  "version": "0.1.3",
+  "version": "0.3.0",
   "description": "Data origin for Datapull: pull your costs and usage data using AWS SDK",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@datapull/json-config": "^0.1.3",
+    "@datapull/json-config": "^0.3.0",
     "aws-sdk": "^2.252.1"
   }
 }
