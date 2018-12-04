@@ -16,6 +16,26 @@ class AwsOrigin {
     };
   }
 
+  /**
+   * AWS API doesn't have a unified results field in list responses.
+   * Instead it would output results in fields like Accounts or Instances.
+   * Here we just merge the results of two list responses together
+   * without knowing which field has the results in advance.
+   *
+   * @param newResponse
+   * @param prevResponse
+   * @returns {*}
+   */
+  mergeResults (newResponse, prevResponse) {
+    Object.keys(newResponse).forEach(key => {
+      if (Array.isArray(prevResponse[key]) && Array.isArray(newResponse[key])) {
+        newResponse[key] = newResponse[key].concat(prevResponse[key]);
+      }
+    });
+
+    return newResponse;
+  }
+
   pullData(config) {
     console.log('[AWS Origin] fetching aws', this.config.service, this.config.method);
 
@@ -48,26 +68,6 @@ class AwsOrigin {
     }
     console.log('[AWS Origin] params', params);
 
-    /**
-     * AWS API doesn't have a unified results field in list responses.
-     * Instead it would output results in fields like Accounts or Instances.
-     * Here we just merge the results of two list responses together
-     * without knowing which field has the results in advance.
-     *
-     * @param newResponse
-     * @param prevResponse
-     * @returns {*}
-     */
-    const mergeResults = (newResponse, prevResponse) => {
-      Object.keys(newResponse).forEach(key => {
-        if (Array.isArray(prevResponse[key]) && Array.isArray(newResponse[key])) {
-          newResponse[key] = newResponse[key].concat(prevResponse[key]);
-        }
-      });
-
-      return newResponse;
-    };
-
     const countResults = (results) => {
       let count = 0;
       Object.keys(results).forEach(key => {
@@ -84,7 +84,7 @@ class AwsOrigin {
       }
 
       const resp = await serviceClient[this.config.method].call(serviceClient, params).promise();
-      const newResults = mergeResults(resp, results);
+      const newResults = this.mergeResults(resp, results);
       if (resp.NextToken) {
         return await getAllInList(resp.NextToken, newResults);
       }
@@ -115,8 +115,8 @@ class AwsOrigin {
     if (!detailsCallConfig.itemsListKey) {
       throw Error("[AWS Origin] Please specify `itemsListKey` in `awsDetailsCall`");
     }
-    if (!detailsCallConfig.itemKey) {
-      throw Error("[AWS Origin] Please specify `itemKey` in `awsDetailsCall`");
+    if (!detailsCallConfig.itemKey && !detailsCallConfig.itemsAreStrings) {
+      throw Error("[AWS Origin] Please specify `itemKey` in `awsDetailsCall` or set `itemsAreStrings` to true");
     }
     if (!detailsCallConfig.method) {
       throw Error("[AWS Origin] Please specify `method` in `awsDetailsCall`");
@@ -131,7 +131,10 @@ class AwsOrigin {
       throw Error("[AWS Origin] Could not get a list of items to make details call");
     }
 
-    const keys = items.map(i => i[detailsCallConfig.itemKey]).filter(i => i);
+    let keys = items;
+    if (!detailsCallConfig.itemsAreStrings) {
+      keys = items.map(i => i[detailsCallConfig.itemKey]).filter(i => i);
+    }
 
     if (keys.length === 0) {
       console.warn("[AWS Origin] Details call won't be done because 0 items are found in the list call response")
@@ -154,7 +157,37 @@ class AwsOrigin {
 
     // make the calls
     const detailCalls = keys.map(k => {
-      return new Promise((detailsCallResolve, detailsCallReject) => {
+      return new Promise(async (detailsCallResolve, detailsCallReject) => {
+
+        // if details call returns a list (need to paginate the results):
+        if (detailsCallConfig.responseIsList) {
+          const getAllInList = async (nextToken, results) => {
+            if (nextToken) {
+              params.NextToken = nextToken;
+            }
+
+            const resp = await detailsServiceClient[detailsMethod].call(detailsServiceClient, {
+              [detailsCallConfig.keyParam]: k
+            }).promise();
+
+            const newResults = this.mergeResults(resp, results);
+            if (resp.NextToken) {
+              return await getAllInList(resp.NextToken, newResults);
+            }
+            return newResults;
+          };
+
+          try {
+            const resp = await getAllInList(null, {});
+            detailsCallResolve(resp)
+          } catch (err) {
+
+          }
+
+          return;
+        }
+
+        // if the details call is not a list call:
         detailsServiceClient[detailsMethod].call(detailsServiceClient, {
           [detailsCallConfig.keyParam]: k
         }, (err, resp) => {
@@ -170,8 +203,7 @@ class AwsOrigin {
 
     // wait for every call to resolve
     try {
-      const responses = await Promise.all(detailCalls);
-      return responses;
+      return await Promise.all(detailCalls);
     } catch (err) {
       console.error("[AWS Origin] One or all of details call failed", err);
       throw err;
