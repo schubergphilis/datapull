@@ -1,16 +1,28 @@
+import {PipelineBuilder, PipelineConfig} from '@datapull/pipeline';
 import * as program from 'commander';
 import * as fs from 'fs';
+import {Container, inject, injectable} from 'inversify';
+import 'reflect-metadata';
 import {RunOptions} from './options/run-options';
-import {Pipeline} from '@datapull/pipeline';
+import {ConfigParser} from './parsers/config-parser';
+import {YamlParser} from './parsers/yaml-parser';
+import {Types} from './symbols';
 
+@injectable()
 class DatapullCli {
+  constructor(
+    @inject(Types.ConfigParser) private fileParser: ConfigParser,
+    @inject(Types.PipelineBuilder) private pipelinesBuilder: PipelineBuilder,
+  ) {
+  }
+
   private static get version(): string {
     const packageJson = fs.readFileSync('./package.json').toString('utf-8');
     const json = JSON.parse(packageJson);
     return json.version;
   }
 
-  static buildPipelines(file: string) {
+  buildPipelines(file: string) {
     let fileContents;
     try {
       fileContents = fs.readFileSync(file, 'utf-8');
@@ -21,18 +33,21 @@ class DatapullCli {
     }
 
     if (!fileContents) {
-      console.error("Could not read specified file");
-      return;
+      console.error("Could not read specified file", file);
+      throw Error("Could not read specified file");
     }
 
-    const pipelineConfig = Pipeline.parse(fileContents);
-    if (!pipelineConfig) {
-      return;
+    let pipelineConfig: PipelineConfig;
+    try {
+      pipelineConfig = this.fileParser.parse(fileContents);
+    } catch (err) {
+      console.error('[ERROR] Could not parse file', file, err);
+      throw err;
     }
 
     let pipelines;
     try {
-      pipelines = Pipeline.build(pipelineConfig);
+      pipelines = this.pipelinesBuilder.build(pipelineConfig);
     } catch (e) {
       console.error("Could not build the pipeline");
       console.error(e);
@@ -42,10 +57,10 @@ class DatapullCli {
     return pipelines;
   }
 
-  static runPipelines(file: string, options: RunOptions) {
+  runPipelines(file: string, options: RunOptions) {
     console.log('[OPTIONS] ', options.maxConcurrent, options.noPush);
 
-    const pipelines = DatapullCli.buildPipelines(file);
+    const pipelines = this.buildPipelines(file);
     console.log('pipelines', pipelines);
 
     // const scheduler = new Scheduler({
@@ -61,7 +76,7 @@ class DatapullCli {
     // scheduler.launch(pipelines);
   }
 
-  static runCLI() {
+  runCLI() {
     program
       .version(DatapullCli.version)
       .usage("<command> [options]");
@@ -70,14 +85,18 @@ class DatapullCli {
       .command("run <file>")
       .option('--maxConcurrent <number>', "How many pipelines to run concurrently", 10)
       .option('--noPush <boolean>', "Run pipeline without pushing messages to the final destination", false)
-      .action(DatapullCli.runPipelines);
+      .action(this.runPipelines.bind(this));
 
     program.parse(process.argv);
   }
 }
 
 export function run() {
-  DatapullCli.runCLI();
+  const container = new Container();
+  container.bind(DatapullCli).toSelf();
+  container.bind(Types.ConfigParser).to(YamlParser);
+  container.bind(Types.PipelineBuilder).to(PipelineBuilder);
+  container.get(DatapullCli).runCLI();
 }
 
 if (require.main === module) {

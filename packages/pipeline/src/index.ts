@@ -1,10 +1,24 @@
-export class Pipeline {
-  static parse(pipelineConfig: string): object {
-    console.log('pipeline parsed!', pipelineConfig);
-    return {};
+import {injectable} from 'inversify';
+import 'reflect-metadata';
+
+@injectable()
+export class PipelineBuilder {
+  private logger: Console;
+
+  constructor() {
+    this.logger = console;
   }
 
-  static build(config: object) {
-    console.log('build', config);
+  build(config: PipelineConfig): Pipeline {
+    this.logger.log('building a new pipeline', config);
+    return new Pipeline();
   }
+}
+
+export interface PipelineConfig {
+
+}
+
+export class Pipeline {
+
 }

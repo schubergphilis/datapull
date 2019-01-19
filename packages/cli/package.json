@@ -20,7 +20,12 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
+    "@datapull/pipeline": "2.0.0",
     "commander": "^2.19.0",
-    "@datapull/pipeline": "2.0.0"
+    "js-yaml": "^3.12.1",
+    "reflect-metadata": "^0.1.13"
+  },
+  "devDependencies": {
+    "inversify": "^5.0.1"
   }
 }
