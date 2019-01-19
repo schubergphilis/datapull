@@ -11,6 +11,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^10.12.18",
+    "bunyan": "^1.8.12",
     "lerna": "^3.10.5",
     "ts-node": "^7.0.1",
     "typescript": "^3.2.4"

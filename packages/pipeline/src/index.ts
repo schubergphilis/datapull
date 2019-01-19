@@ -1,16 +1,15 @@
-import {injectable} from 'inversify';
+import {inject, injectable} from 'inversify';
 import 'reflect-metadata';
 
 @injectable()
 export class PipelineBuilder {
-  private logger: Console;
 
-  constructor() {
-    this.logger = console;
+  constructor(@inject('logger') private logger: Console) {
   }
 
   build(config: PipelineConfig): Pipeline {
-    this.logger.log('building a new pipeline', config);
+    this.logger.info('building a new pipeline');
+    this.logger.debug(config);
     return new Pipeline();
   }
 }

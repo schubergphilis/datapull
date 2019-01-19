@@ -21,11 +21,13 @@
   },
   "dependencies": {
     "@datapull/pipeline": "2.0.0",
+    "bunyan": "^1.8.12",
     "commander": "^2.19.0",
     "js-yaml": "^3.12.1",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
+    "@types/bunyan": "^1.8.5",
     "inversify": "^5.0.1"
   }
 }

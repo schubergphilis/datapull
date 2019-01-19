@@ -1,4 +1,5 @@
 import {PipelineBuilder, PipelineConfig} from '@datapull/pipeline';
+import {createLogger, DEBUG} from 'bunyan';
 import * as program from 'commander';
 import * as fs from 'fs';
 import {Container, inject, injectable} from 'inversify';
@@ -13,6 +14,7 @@ class DatapullCli {
   constructor(
     @inject(Types.ConfigParser) private fileParser: ConfigParser,
     @inject(Types.PipelineBuilder) private pipelinesBuilder: PipelineBuilder,
+    @inject('logger') private logger: Console,
   ) {
   }
 
@@ -58,7 +60,8 @@ class DatapullCli {
   }
 
   runPipelines(file: string, options: RunOptions) {
-    console.log('[OPTIONS] ', options.maxConcurrent, options.noPush);
+    this.logger.info('Running pipelines', file);
+    this.logger.debug('[OPTIONS] ', options.maxConcurrent, options.noPush);
 
     const pipelines = this.buildPipelines(file);
     console.log('pipelines', pipelines);
@@ -92,11 +95,16 @@ class DatapullCli {
 }
 
 export function run() {
+  const logger = createLogger({name: '@datapull/cli'});
+  logger.level(DEBUG);
+
   const container = new Container();
   container.bind(DatapullCli).toSelf();
   container.bind(Types.ConfigParser).to(YamlParser);
   container.bind(Types.PipelineBuilder).to(PipelineBuilder);
+  container.bind('logger').toConstantValue(logger);
   container.get(DatapullCli).runCLI();
+
 }
 
 if (require.main === module) {
