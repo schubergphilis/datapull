@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "types": [
+      "node"
+    ],
+    "module": "commonjs",
+    "lib": [
+      "es6",
+      "es2017"
+    ],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "test"
+  ],
+  "types": [
+    "typePatches"
+  ]
+}
