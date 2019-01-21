@@ -31,6 +31,8 @@
     "@datapull/json-config": "^0.1.3",
     "@datapull/jsonpath-flatlist-transformer": "^0.3.0",
     "@datapull/jsonpath-transformer": "^0.3.0",
+    "@datapull/kinesis-stream-destination": "^0.4.0",
+    "@datapull/kinesis-firehose-destination": "^0.4.0",
     "@datapull/map-transformer": "^0.3.0",
     "@datapull/mysql-origin": "^0.3.0",
     "@datapull/okta-origin": "^0.3.0",
