@@ -1,6 +1,6 @@
 {
   "name": "@datapull/jsonpath-transformer",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Data transformer for Datapull: pick certain data from your origin using jsonpath syntax",
   "main": "index.js",
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "@datapull/mysql-origin",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Data origin for MySQL: pull data from a MySQL database",
   "main": "index.js",
   "scripts": {
