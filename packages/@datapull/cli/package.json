@@ -1,6 +1,6 @@
 {
   "name": "@datapull/cli",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "CLI for datapull",
   "main": "index.js",
   "bin": {
@@ -15,11 +15,11 @@
     "access": "public"
   },
   "dependencies": {
-    "@datapull/pipelines-scheduler": "^0.4.0",
+    "@datapull/pipelines-scheduler": "^0.4.1",
     "cli-table2": "^0.2.0",
     "commander": "^2.11.0"
   },
   "devDependencies": {
-    "@datapull/pipeline": "^0.4.0"
+    "@datapull/pipeline": "^0.4.1"
   }
 }
