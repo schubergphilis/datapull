@@ -162,17 +162,34 @@ class AwsOrigin {
         // if details call returns a list (need to paginate the results):
         if (detailsCallConfig.responseIsList) {
           const getAllInList = async (nextToken, results) => {
+            const params = {
+              [detailsCallConfig.keyParam]: k
+            };
+
             if (nextToken) {
-              params.NextToken = nextToken;
+              Object.assign(params, nextToken);
             }
 
-            const resp = await detailsServiceClient[detailsMethod].call(detailsServiceClient, {
-              [detailsCallConfig.keyParam]: k
-            }).promise();
+            let resp;
+            try {
+              resp = await detailsServiceClient[detailsMethod].call(detailsServiceClient, params).promise();
+            } catch (err) {
+              console.log('[AWS Origin] ERROR making details call', err);
+              throw err;
+            }
 
             const newResults = this.mergeResults(resp, results);
+
+            let respNextToken = null;
             if (resp.NextToken) {
-              return await getAllInList(resp.NextToken, newResults);
+              respNextToken = {'NextToken': resp.NextToken};
+            }
+            if (resp.nextToken) {
+              respNextToken = {'nextToken': resp.nextToken};
+            }
+
+            if (respNextToken) {
+              return await getAllInList(respNextToken, newResults);
             }
             return newResults;
           };
@@ -181,7 +198,8 @@ class AwsOrigin {
             const resp = await getAllInList(null, {});
             detailsCallResolve(resp)
           } catch (err) {
-
+            console.log('[AWS Origin] Error trying to get all results from the details call', err);
+            throw err;
           }
 
           return;
