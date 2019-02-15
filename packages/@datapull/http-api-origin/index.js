@@ -114,13 +114,13 @@ class HttpApiOrigin {
       }
 
       if (this.config.auth === 'basic') {
-        if (!config.username) {
+        if (!this.config.username) {
           throw Error('HTTP Origin: username for basic auth is not set up');
         }
-        if (!config.password) {
+        if (!this.config.password) {
           throw Error('HTTP Origin: password for basic auth is not set up');
         }
-        options.auth = `${config.username}:${config.password}`;
+        options.auth = `${this.config.username}:${this.config.password}`;
       }
 
       if (this.config.headers) {
