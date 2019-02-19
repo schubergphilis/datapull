@@ -1,0 +1,20 @@
+name: generic-data
+
+description: Collects data from Atlassian
+
+collect:
+  runner: atlassian-origin
+  organisation: "sbp-blg"
+  username: ${env.ATLASSIAN_USERNAME}
+  password: ${env.ATLASSIAN_PASSWORD}
+  batchSize: 5
+
+push-to-kinesis:
+  runner: aws-destination.Kinesis.putRecords
+  stream: "public-cloud-records"
+  region: "eu-west-1"
+  partitionKey: "single-shard"
+  accessKeyId: ${env.AWS_D_K}
+  secretAccessKey: ${env.AWS_D_S}
+  extendMessage:
+    details: ${data}
