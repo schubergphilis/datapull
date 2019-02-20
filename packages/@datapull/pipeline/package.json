@@ -1,6 +1,6 @@
 {
   "name": "@datapull/pipeline",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Pipeline reads a yaml file with pipeline declaration, builds a plan for the given pipeline and runs it",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@datapull/json-config": "^0.4.0",
+    "@datapull/json-config": "^0.5.0",
     "deepcopy": "^0.6.3",
     "js-yaml": "^3.10.0",
     "lodash": "^4.17.4",
@@ -20,25 +20,25 @@
     "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "@datapull/atlassian-origin": "^0.4.2",
-    "@datapull/aws-costexplorer-origin": "^0.4.0",
-    "@datapull/aws-destination": "^0.4.0",
-    "@datapull/aws-origin": "^0.4.1",
-    "@datapull/bigquery-origin": "^0.4.0",
-    "@datapull/chef-origin": "^0.4.0",
-    "@datapull/filter-transformer": "^0.4.0",
-    "@datapull/http-api-origin": "^0.4.0",
-    "@datapull/influx-origin": "^0.4.0",
+    "@datapull/atlassian-origin": "^0.5.0",
+    "@datapull/aws-costexplorer-origin": "^0.5.0",
+    "@datapull/aws-destination": "^0.5.0",
+    "@datapull/aws-origin": "^0.5.0",
+    "@datapull/bigquery-origin": "^0.5.0",
+    "@datapull/chef-origin": "^0.5.0",
+    "@datapull/filter-transformer": "^0.5.0",
+    "@datapull/http-api-origin": "^0.5.0",
+    "@datapull/influx-origin": "^0.5.0",
     "@datapull/json-config": "^0.1.3",
-    "@datapull/jsonpath-flatlist-transformer": "^0.4.0",
-    "@datapull/jsonpath-transformer": "^0.4.0",
-    "@datapull/kinesis-firehose-destination": "^0.4.0",
-    "@datapull/kinesis-stream-destination": "^0.4.0",
-    "@datapull/map-transformer": "^0.4.0",
-    "@datapull/mysql-origin": "^0.4.0",
-    "@datapull/okta-origin": "^0.4.0",
-    "@datapull/redshift-destination": "^0.4.0",
-    "@datapull/reduce-transformer": "^0.4.0",
-    "@datapull/splunk-origin": "^0.4.0"
+    "@datapull/jsonpath-flatlist-transformer": "^0.5.0",
+    "@datapull/jsonpath-transformer": "^0.5.0",
+    "@datapull/kinesis-firehose-destination": "^0.5.0",
+    "@datapull/kinesis-stream-destination": "^0.5.0",
+    "@datapull/map-transformer": "^0.5.0",
+    "@datapull/mysql-origin": "^0.5.0",
+    "@datapull/okta-origin": "^0.5.0",
+    "@datapull/redshift-destination": "^0.5.0",
+    "@datapull/reduce-transformer": "^0.5.0",
+    "@datapull/splunk-origin": "^0.5.0"
   }
 }
