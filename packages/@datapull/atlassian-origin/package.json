@@ -1,12 +1,12 @@
 {
   "name": "@datapull/atlassian-origin",
   "version": "0.4.2",
-  "description": "Data origin for Okta: pull data from Okta API",
+  "description": "Data origin for Atlassian services: pull data from Jira Cloud and Confluence Cloud API",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Anton Nekipelov <anton.nekipelov@gmail.com>",
+  "author": "Irina Krstic <irina.kr.21@gmail.com>",
   "license": "MIT",
   "publishConfig": {
     "access": "public"

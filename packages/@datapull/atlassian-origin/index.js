@@ -1,7 +1,7 @@
 const processConfig = require('@datapull/json-config').processConfig;
 const got = require('got');
 
-class HttpApiOrigin {
+class AtlassianOrigin {
   constructor(stepConfig) {
     const config = processConfig(stepConfig);
     this.organisation = config.organisation;
@@ -135,5 +135,5 @@ class HttpApiOrigin {
 
 exports.datapullStep = {
   isOrigin: true,
-  constructor: HttpApiOrigin
+  constructor: AtlassianOrigin
 };

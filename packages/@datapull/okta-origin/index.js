@@ -2,7 +2,7 @@ const processConfig = require('@datapull/json-config').processConfig;
 const got = require('got');
 const url = require('url');
 
-class HttpApiOrigin {
+class OktaOrigin {
   constructor(stepConfig) {
     // replace variables in the config:
     try {
@@ -119,5 +119,5 @@ class HttpApiOrigin {
 
 exports.datapullStep = {
   isOrigin: true,
-  constructor: HttpApiOrigin
+  constructor: OktaOrigin
 };
