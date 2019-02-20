@@ -8,6 +8,7 @@ collect:
   username: ${env.ATLASSIAN_USERNAME}
   password: ${env.ATLASSIAN_PASSWORD}
   batchSize: 5
+  service: confluence
 
 push-to-kinesis:
   runner: aws-destination.Kinesis.putRecords
