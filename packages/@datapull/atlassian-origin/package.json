@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Irina Krstic <irina.kr.21@gmail.com>",
+  "author": "Andrii Mishkovskyi",
+  "contributors": ["Irina Krstic <irina.kr.21@gmail.com>"],
   "license": "MIT",
   "publishConfig": {
     "access": "public"
