@@ -9,7 +9,7 @@ class HttpApiOrigin {
     this.password = config.password;
     this.batchSize = Number(config.batchSize || 1000);
     this.service = config.service;
-    if (this.batchSize > 1000) {
+    if (this.service === 'jira' && this.batchSize > 1000) {
       throw new Error(`Atlassian API does not support returning more than 1000 users per call, you requested ${this.batchSize}`);
     }
   }
@@ -85,7 +85,7 @@ class HttpApiOrigin {
         protocol: 'https:',
         method: 'get',
         host: `${this.organisation}.atlassian.net`,
-        path: `/wiki/rest/api/group?start=${index}`,
+        path: `/wiki/rest/api/group?start=${index}&limit=${this.batchSize}`,
         auth: `${this.username}:${this.password}`,
         json: true
       };
@@ -97,21 +97,20 @@ class HttpApiOrigin {
 
       // The definition of "incomplete page" is right here, number of
       // results is smaller than requested batch size
-      if (response.body['results'].length < 200) {
+      if (response.body['size'] < this.batchSize) {
         break
       }
-      index += 200;
+      index += this.batchSize;
     }
 
     for(const groupName of groups ) {
       let index = 0;
-      const limit = 200;
       while (true) {
         const options = {
           protocol: 'https:',
           method: 'get',
           host: `${this.organisation}.atlassian.net`,
-          path: `/wiki/rest/api/group/${groupName}/member?start=${index}&limit=${limit}`,
+          path: `/wiki/rest/api/group/${groupName}/member?start=${index}&limit=${this.batchSize}`,
           auth: `${this.username}:${this.password}`,
           json: true
         };
@@ -123,10 +122,10 @@ class HttpApiOrigin {
 
         // The definition of "incomplete page" is right here, number of
         // results is smaller than requested batch size
-        if (response.body['results'].length  < limit) {
+        if (response.body['size']  < this.batchSize) {
           break
         }
-        index += 200;
+        index += this.batchSize;
       }
     }
 
