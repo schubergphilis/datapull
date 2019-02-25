@@ -1,6 +1,6 @@
 {
   "name": "@datapull/pipelines-scheduler",
-  "version": "0.5.1",
+  "version": "0.5.0",
   "description": "Pipelines scheduler: schedule the run of multiple pipelines",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@datapull/pipeline": "^0.5.1",
+    "@datapull/pipeline": "^0.5.0",
     "bottleneck": "^1.16.0"
   }
 }
