@@ -1,6 +1,6 @@
 {
   "name": "@datapull/chef-origin",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "description": "Data origin for Datapull: pull data from Splunk",
   "main": "index.js",
   "scripts": {

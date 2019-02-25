@@ -1,6 +1,6 @@
 {
   "name": "@datapull/kinesis-stream-destination",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "description": "Data destination for Datapull: send your data Amazon Kinesis",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@datapull/json-config": "^0.5.0",
+    "@datapull/json-config": "^0.5.2",
     "aws-sdk": "^2.146.0",
     "bottleneck": "^1.16.0"
   }
