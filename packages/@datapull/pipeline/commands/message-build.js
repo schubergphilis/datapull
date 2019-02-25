@@ -29,6 +29,7 @@ exports.buildMessage = function (messageTemplate, pipeline, data) {
       }
     },
     moment: moment,
+    env: process.env,
     uuidv4: uuidv4
   }, {data: dataString}, {rawData: data}, {originRawData: pipeline.originRawData});
 
