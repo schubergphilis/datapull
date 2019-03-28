@@ -9,7 +9,7 @@ class AtlassianOrigin {
     this.password = config.password;
     this.batchSize = Number(config.batchSize || 50);
     if (this.batchSize > 50) {
-      throw new Error(`Atlassian API does not support returning more than 1000 users per call, you requested ${this.batchSize}`);
+      throw new Error(`Atlassian API does not support returning more than 50 users per call, you requested ${this.batchSize}`);
     }
     this.service = config.service;
     this.includeInactiveUsers = config.includeInactiveUsers || false;
@@ -25,7 +25,7 @@ class AtlassianOrigin {
   // To list all Atlassian users in specific organisation,
   // that have access to jira tool,
   // we have to find all users that are members of 'jira-software-users'.
-  // For those who have an access to confluence,
+  // For those who have an access to confluence,g
   // we have to retrieve members of 'confluence-users' group.
   async pullData(_) {
     if (this.service === 'jira') {
