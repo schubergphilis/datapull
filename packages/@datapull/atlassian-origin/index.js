@@ -8,11 +8,11 @@ class AtlassianOrigin {
     this.username = config.username;
     this.password = config.password;
     this.batchSize = Number(config.batchSize || 50);
-    this.service = config.service;
-    this.includeInactiveUsers = config.includeInactiveUsers || false;
-    if (this.service === 'jira' && this.batchSize > 50) {
+    if (this.batchSize > 50) {
       throw new Error(`Atlassian API does not support returning more than 1000 users per call, you requested ${this.batchSize}`);
     }
+    this.service = config.service;
+    this.includeInactiveUsers = config.includeInactiveUsers || false;
   }
 
   get originDeclaration() {
