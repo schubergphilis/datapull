@@ -8,7 +8,7 @@ collect:
   username: ${env.ATLASSIAN_USERNAME}
   password: ${env.ATLASSIAN_PASSWORD}
   batchSize: 5
-  service: confluence
+  groupName: "jira-software-users"
 
 push-to-kinesis:
   runner: aws-destination.Kinesis.putRecords
