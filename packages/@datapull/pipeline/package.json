@@ -1,6 +1,6 @@
 {
   "name": "@datapull/pipeline",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Pipeline reads a yaml file with pipeline declaration, builds a plan for the given pipeline and runs it",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "@datapull/atlassian-origin": "^0.5.2",
+    "@datapull/atlassian-origin": "^0.5.4",
     "@datapull/aws-costexplorer-origin": "^0.5.2",
     "@datapull/aws-destination": "^0.5.2",
     "@datapull/aws-origin": "^0.5.2",
