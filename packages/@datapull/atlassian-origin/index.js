@@ -24,13 +24,9 @@ class AtlassianOrigin {
       runner: this.pullData.bind(this)
     };
   }
-  // The purpose of this origin is to list all members of specific
-  // group in Atlassian Cloud. As at this moment Atlassian REST API
-  // doesn't have a proper end point to list all groups in specific
-  // organisation, to list all Atlassian users in specific organisation,
-  // that have access to jira tool, we will use this origin to pull
-  // all members of 'jira-software-users'. For those who have an access
-  // to confluence, we have to retrieve members of 'confluence-users' group.
+  // This origin pulls data from Atlassian Cloud REST API.
+  // We list all Jira users who are members of a group
+  // which name is passed in configuration parameter.
   async pullData(_) {
     console.log(`[Atlassian Origin] pulling ${this.groupName} user data for ${this.organisation} with batch size ${this.batchSize}`);
 
