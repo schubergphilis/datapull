@@ -17,7 +17,13 @@ class ChefOrigin {
     async pullData(pipelineConfig) {
         console.log('[Chef] pulling data for ', pipelineConfig.apiUrl);
         let options;
-        if (!pipelineConfig.key) {
+        if (pipelineConfig.key) {
+            options = {
+                user_name: pipelineConfig.username,
+                key: pipelineConfig.key,
+                url: pipelineConfig.apiUrl
+            };
+        } else {
             if (!pipelineConfig.key_path) {
                 console.error(`[Chef origin] key path or key must be specified`);
                 throw Error(`Key path or key must be specified`);
@@ -31,12 +37,6 @@ class ChefOrigin {
             options = {
                 user_name: pipelineConfig.username,
                 key_path: pipelineConfig.key_path,
-                url: pipelineConfig.apiUrl
-            };
-        } else {
-            options = {
-                user_name: pipelineConfig.username,
-                key: pipelineConfig.key,
                 url: pipelineConfig.apiUrl
             };
         }
