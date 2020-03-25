@@ -1,14 +1,21 @@
 {
-  "version": "0.5.5",
+  "version": "0.6.0-alpha.0",
   "npmClient": "npm",
   "command": {
     "publish": {
-      "ignoreChanges": ["ignored-file", "*.md"],
+      "ignoreChanges": [
+        "ignored-file",
+        "*.md"
+      ],
       "message": "chore(release): publish"
     },
     "bootstrap": {
-      "npmClientArgs": ["--no-package-lock"]
+      "npmClientArgs": [
+        "--no-package-lock"
+      ]
     }
   },
-  "packages": ["packages/@datapull/*"]
+  "packages": [
+    "packages/@datapull/*"
+  ]
 }
