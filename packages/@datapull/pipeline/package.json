@@ -25,7 +25,6 @@
     "@datapull/aws-destination": "^0.5.2",
     "@datapull/aws-origin": "^0.5.2",
     "@datapull/bigquery-origin": "^0.5.2",
-    "@datapull/chef-origin": "^0.5.5",
     "@datapull/filter-transformer": "^0.5.2",
     "@datapull/http-api-origin": "^0.5.2",
     "@datapull/influx-origin": "^0.5.2",
