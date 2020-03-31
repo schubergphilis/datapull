@@ -1,6 +1,6 @@
 {
   "name": "sbp-datapull",
-  "version": "0.5.5",
+  "version": "0.0.1",
   "description": "Datapull pulls data from 3rd-party APIs and pushes it to a destination of choice",
   "main": "index.js",
   "scripts": {

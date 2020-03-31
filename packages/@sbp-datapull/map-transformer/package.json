@@ -1,10 +1,11 @@
 {
   "name": "@sbp-datapull/map-transformer",
-  "version": "0.6.1-alpha.0",
+  "version": "0.0.1",
   "description": "Data transformer for Datapull: map data to a different structure",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "gitHead": "4760e32e21debdd68745fc8daff4c5321b936602"
 }

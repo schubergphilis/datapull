@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/okta-origin",
-  "version": "0.6.1-alpha.0",
+  "version": "0.0.1",
   "description": "Data origin for Okta: pull data from Okta API",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@sbp-datapull/json-config": "^0.6.1-alpha.0",
+    "@sbp-datapull/json-config": "^0.0.1",
     "got": "^8.0.0"
-  }
+  },
+  "gitHead": "4760e32e21debdd68745fc8daff4c5321b936602"
 }

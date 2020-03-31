@@ -1,21 +1,14 @@
 {
-  "version": "0.6.1-alpha.0",
+  "version": "0.0.1",
   "npmClient": "npm",
   "command": {
     "publish": {
-      "ignoreChanges": [
-        "ignored-file",
-        "*.md"
-      ],
+      "ignoreChanges": ["ignored-file", "*.md"],
       "message": "chore(release): publish"
     },
     "bootstrap": {
-      "npmClientArgs": [
-        "--no-package-lock"
-      ]
+      "npmClientArgs": ["--no-package-lock"]
     }
   },
-  "packages": [
-    "packages/@sbp-datapull/*"
-  ]
+  "packages": ["packages/@sbp-datapull/*"]
 }
