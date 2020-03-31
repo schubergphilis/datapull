@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/redshift-destination",
-  "version": "0.5.5",
+  "version": "0.6.0-alpha.0",
   "description": "Data destination for Datapull: push your data to Amazon Redshift",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@sbp-datapull/json-config": "^0.5.5",
+    "@sbp-datapull/json-config": "^0.6.0-alpha.0",
     "pg": "^7.4.3"
   }
 }
