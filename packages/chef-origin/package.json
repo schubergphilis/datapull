@@ -6,11 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Andrii Mishkovskyi <amishkovskyi@schubergphilis.com>",
   "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {
     "bottleneck": "^1.16.0",
     "chef-api": "0.6.0",

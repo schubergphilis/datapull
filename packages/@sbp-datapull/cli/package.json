@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/cli",
-  "version": "0.6.0-alpha.0",
+  "version": "0.5.5",
   "description": "CLI for datapull",
   "main": "index.js",
   "bin": {
@@ -9,17 +9,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Anton Nekipelov <anton.nekipelov@gmail.com>",
   "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {
-    "@sbp-datapull/pipelines-scheduler": "^0.6.0-alpha.0",
+    "@sbp-datapull/pipelines-scheduler": "^0.5.5",
     "cli-table2": "^0.2.0",
     "commander": "^2.11.0"
   },
   "devDependencies": {
-    "@sbp-datapull/pipeline": "^0.6.0-alpha.0"
+    "@sbp-datapull/pipeline": "^0.5.5"
   }
 }
