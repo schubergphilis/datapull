@@ -53,7 +53,3 @@ const scheduler = new Scheduler({
 });
 scheduler.launch(pipelines);
 ```
-
-# Development
-
-Please read [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)

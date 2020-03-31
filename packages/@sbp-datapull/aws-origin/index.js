@@ -1,7 +1,9 @@
 const aws = require('aws-sdk');
 
-class AwsOrigin {
-  constructor(config) {
+class AwsOrigin
+{
+  constructor(config)
+  {
     this.config = config;
 
     const runnerParts = this.config.runner.split('.');
@@ -9,7 +11,8 @@ class AwsOrigin {
     this.config.method = runnerParts[2];
   }
 
-  get originDeclaration() {
+  get originDeclaration()
+  {
     return {
       name: ['AWS', this.config.service, this.config.method].join(':'),
       runner: this.pullData.bind(this)
@@ -26,9 +29,12 @@ class AwsOrigin {
    * @param prevResponse
    * @returns {*}
    */
-  mergeResults(newResponse, prevResponse) {
-    Object.keys(newResponse).forEach(key => {
-      if (Array.isArray(prevResponse[key]) && Array.isArray(newResponse[key])) {
+  mergeResults(newResponse, prevResponse)
+  {
+    Object.keys(newResponse).forEach(key =>
+    {
+      if (Array.isArray(prevResponse[key]) && Array.isArray(newResponse[key]))
+      {
         newResponse[key] = newResponse[key].concat(prevResponse[key]);
       }
     });
@@ -36,14 +42,16 @@ class AwsOrigin {
     return newResponse;
   }
 
-  async pullData(config) {
+  async pullData(config)
+  {
     console.log(
       '[AWS Origin] fetching aws',
       this.config.service,
       this.config.method
     );
 
-    if (!aws[this.config.service]) {
+    if (!aws[this.config.service])
+    {
       throw new Error(
         `No such service found in AWS sdk: ${this.config.service}`
       );
@@ -51,53 +59,70 @@ class AwsOrigin {
 
     const Service = aws[this.config.service];
 
-    if (!config.region) {
-      throw new Error(`region is not specified`);
+    if (!config.region)
+    {
+      throw new Error('region is not specified');
     }
 
-    if (config.roleArn) {
+    if (config.roleArn)
+    {
       const sts = new aws.STS();
       const stsParams = {
         RoleArn: config.roleArn,
-        RoleSessionName: ''
+        RoleSessionName: `${Date.now()}`
       };
+      console.debug(`Trying to assume role as [${config.roleArn}]`)
       const { Credentials } = await sts.assumeRole(stsParams).promise();
-      config.credentials = Credentials;
-    } else {
-      if (!config.accessKeyId) {
-        throw new Error(`API access key is empty`);
-      } else if (!config.secretAccessKey) {
-        throw new Error(`API secret key is empty`);
-      } else {
-        throw new Error(`API credentials and role ARN are empty`);
+      const { AccessKeyId, SecretAccessKey, SessionToken } = Credentials
+      config.accessKeyId = AccessKeyId
+      config.secretAccessKey = SecretAccessKey
+      config.sessionToken = SessionToken
+    } else
+    {
+      if (!config.accessKeyId)
+      {
+        throw new Error('API access key is empty');
+      } else if (!config.secretAccessKey)
+      {
+        throw new Error('API secret key is empty');
+      } else
+      {
+        throw new Error('API credentials and role ARN are empty');
       }
     }
 
     const serviceClient = new Service(config);
 
-    if (!serviceClient[this.config.method]) {
+    if (!serviceClient[this.config.method])
+    {
       throw new Error(
         `No such method found in AWS sdk ${this.config.service} service: ${this.config.method}`
       );
     }
     let params = {};
-    if (this.config.requestParams) {
+    if (this.config.requestParams)
+    {
       params = Object.assign({}, this.config.requestParams);
     }
     console.log('[AWS Origin] params', params);
 
-    const countResults = results => {
+    const countResults = results =>
+    {
       let count = 0;
-      Object.keys(results).forEach(key => {
-        if (Array.isArray(results[key])) {
+      Object.keys(results).forEach(key =>
+      {
+        if (Array.isArray(results[key]))
+        {
           count += results[key].length;
         }
       });
       return count;
     };
 
-    const getAllInList = async (nextToken, results) => {
-      if (nextToken) {
+    const getAllInList = async (nextToken, results) =>
+    {
+      if (nextToken)
+      {
         params.NextToken = nextToken;
       }
 
@@ -105,34 +130,39 @@ class AwsOrigin {
         .call(serviceClient, params)
         .promise();
       const newResults = this.mergeResults(resp, results);
-      if (resp.NextToken) {
+      if (resp.NextToken)
+      {
         return await getAllInList(resp.NextToken, newResults);
       }
       return newResults;
     };
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve, reject) =>
+    {
       const resp = await getAllInList(null, {});
 
       console.log(
         `[AWS Origin] fetched ${countResults(resp)} results from ${
-          this.config.service
+        this.config.service
         }.${this.config.method}`
       );
 
-      if (!this.config.awsDetailsCall) {
+      if (!this.config.awsDetailsCall)
+      {
         return resolve(resp);
       }
 
       // For every item in the response, make a details call:
-      try {
+      try
+      {
         const details = await this.pullDataFromDetailsCall(
           this.config.awsDetailsCall,
           config,
           resp
         );
         return resolve(details);
-      } catch (err) {
+      } catch (err)
+      {
         return reject(err);
       }
     });
@@ -142,58 +172,68 @@ class AwsOrigin {
     detailsCallConfig,
     clientConfig,
     listCallResponse
-  ) {
+  )
+  {
     // validate the config:
-    if (!detailsCallConfig.itemsListKey) {
+    if (!detailsCallConfig.itemsListKey)
+    {
       throw Error(
         '[AWS Origin] Please specify `itemsListKey` in `awsDetailsCall`'
       );
     }
-    if (!detailsCallConfig.itemKey && !detailsCallConfig.itemsAreStrings) {
+    if (!detailsCallConfig.itemKey && !detailsCallConfig.itemsAreStrings)
+    {
       throw Error(
         '[AWS Origin] Please specify `itemKey` in `awsDetailsCall` or set `itemsAreStrings` to true'
       );
     }
-    if (!detailsCallConfig.method) {
+    if (!detailsCallConfig.method)
+    {
       throw Error('[AWS Origin] Please specify `method` in `awsDetailsCall`');
     }
-    if (!detailsCallConfig.keyParam) {
+    if (!detailsCallConfig.keyParam)
+    {
       throw Error('[AWS Origin] Please specify `keyParam` in `awsDetailsCall`');
     }
 
     // get the item keys from list call:
     const items = listCallResponse[detailsCallConfig.itemsListKey];
-    if (!Array.isArray(items)) {
+    if (!Array.isArray(items))
+    {
       throw Error(
         '[AWS Origin] Could not get a list of items to make details call'
       );
     }
 
     let keys = items;
-    if (!detailsCallConfig.itemsAreStrings) {
+    if (!detailsCallConfig.itemsAreStrings)
+    {
       keys = items.map(i => i[detailsCallConfig.itemKey]).filter(i => i);
     }
 
-    if (keys.length === 0) {
+    if (keys.length === 0)
+    {
       console.warn(
-        "[AWS Origin] Details call won't be done because 0 items are found in the list call response"
+        '[AWS Origin] Details call won\'t be done because 0 items are found in the list call response'
       );
       return [];
     }
 
     // configure the aws client
     const runnerParts = detailsCallConfig.method.split('.');
-    if (runnerParts.length < 2) {
+    if (runnerParts.length < 2)
+    {
       throw Error(
         '[AWS Origin] `method` in `awsDetailsCall` should specify name of the service and name of the method for a details call'
       );
     }
 
     const DetailsService = aws[runnerParts[0]];
-    if (!DetailsService) {
+    if (!DetailsService)
+    {
       throw Error(
         '[AWS Origin] no service found to make a details call: ' +
-          runnerParts[0]
+        runnerParts[0]
       );
     }
 
@@ -201,25 +241,32 @@ class AwsOrigin {
     const detailsServiceClient = new DetailsService(clientConfig);
 
     // make the calls
-    const detailCalls = keys.map(k => {
-      return new Promise(async (detailsCallResolve, detailsCallReject) => {
+    const detailCalls = keys.map(k =>
+    {
+      return new Promise(async (detailsCallResolve, detailsCallReject) =>
+      {
         // if details call returns a list (need to paginate the results):
-        if (detailsCallConfig.responseIsList) {
-          const getAllInList = async (nextToken, results) => {
+        if (detailsCallConfig.responseIsList)
+        {
+          const getAllInList = async (nextToken, results) =>
+          {
             const params = {
               [detailsCallConfig.keyParam]: k
             };
 
-            if (nextToken) {
+            if (nextToken)
+            {
               Object.assign(params, nextToken);
             }
 
             let resp;
-            try {
+            try
+            {
               resp = await detailsServiceClient[detailsMethod]
                 .call(detailsServiceClient, params)
                 .promise();
-            } catch (err) {
+            } catch (err)
+            {
               console.log('[AWS Origin] ERROR making details call', err);
               throw err;
             }
@@ -227,23 +274,28 @@ class AwsOrigin {
             const newResults = this.mergeResults(resp, results);
 
             let respNextToken = null;
-            if (resp.NextToken) {
+            if (resp.NextToken)
+            {
               respNextToken = { NextToken: resp.NextToken };
             }
-            if (resp.nextToken) {
+            if (resp.nextToken)
+            {
               respNextToken = { nextToken: resp.nextToken };
             }
 
-            if (respNextToken) {
+            if (respNextToken)
+            {
               return await getAllInList(respNextToken, newResults);
             }
             return newResults;
           };
 
-          try {
+          try
+          {
             const resp = await getAllInList(null, {});
             detailsCallResolve(resp);
-          } catch (err) {
+          } catch (err)
+          {
             console.log(
               '[AWS Origin] Error trying to get all results from the details call',
               err
@@ -260,8 +312,10 @@ class AwsOrigin {
           {
             [detailsCallConfig.keyParam]: k
           },
-          (err, resp) => {
-            if (err) {
+          (err, resp) =>
+          {
+            if (err)
+            {
               console.error('[AWS Origin] Details call ERROR ', err);
               return detailsCallReject(err);
             }
@@ -273,9 +327,11 @@ class AwsOrigin {
     });
 
     // wait for every call to resolve
-    try {
+    try
+    {
       return await Promise.all(detailCalls);
-    } catch (err) {
+    } catch (err)
+    {
       console.error('[AWS Origin] One or all of details call failed', err);
       throw err;
     }

@@ -5,24 +5,30 @@ const datapullPipeline = require('@sbp-datapull/pipeline');
 const Scheduler = require('@sbp-datapull/pipelines-scheduler').Scheduler;
 const packagejson = require('./package.json');
 
-const buildPipelines = function(file) {
+const buildPipelines = function (file)
+{
   let fileContents;
-  try {
+  try
+  {
     fileContents = fs.readFileSync(file, 'utf-8');
-  } catch (e) {
+  } catch (e)
+  {
     console.error('Could not read specified file');
     console.error(e);
   }
 
   const pipelineConfig = datapullPipeline.parse(fileContents);
-  if (!pipelineConfig) {
+  if (!pipelineConfig)
+  {
     return;
   }
 
   let pipelines;
-  try {
+  try
+  {
     pipelines = datapullPipeline.build(pipelineConfig);
-  } catch (e) {
+  } catch (e)
+  {
     console.error('Could not build the pipeline');
     console.error(e);
     return [];
@@ -31,19 +37,21 @@ const buildPipelines = function(file) {
   return pipelines;
 };
 
-exports.run = function() {
+exports.run = function ()
+{
   console.log('Datapull version', packagejson.version);
 
   program.version(packagejson.version).usage('<command> [options]');
 
-  program.command('plan <file>').action(function(file) {
+  program.command('plan <file>').action(function (file)
+  {
     const pipelines = buildPipelines(file);
 
     console.log(`${pipelines.length} pipelines planned:`);
 
     // output table:
 
-    pipelines.forEach(p => {
+    pipelines.forEach(p =>{
       const table = new Table({
         head: ['config', 'origin', 'transformers', 'destination'],
         colWidths: [45, 30, 30, 30]
@@ -60,7 +68,8 @@ exports.run = function() {
         },
         { rowSpan, content: p.destination.name }
       ]);
-      for (let i = 1; i < configValues.length; i++) {
+      for (let i = 1; i < configValues.length; i++)
+      {
         table.push([JSON.stringify(configValues[i])]);
       }
 
@@ -84,7 +93,8 @@ exports.run = function() {
       '--maxConcurrent <number>',
       'How many pipelines to run concurrently'
     )
-    .action(function(file, options) {
+    .action(function (file, options)
+    {
       const pipelines = buildPipelines(file);
 
       const scheduler = new Scheduler({
@@ -100,11 +110,14 @@ exports.run = function() {
       scheduler.launch(pipelines);
     });
 
-  program.command('stats <file>').action(function(file) {
+  program.command('stats <file>').action(function (file)
+  {
     const pipelines = buildPipelines(file);
-    pipelines.forEach((pipeline, idx) => {
+    pipelines.forEach((pipeline, idx) =>
+    {
       console.log(`[CLI stats] Dry run for pipeline #${idx}`);
-      datapullPipeline.statsOnly(pipeline).catch(err => {
+      datapullPipeline.statsOnly(pipeline).catch(err =>
+      {
         console.log(`[CLI stats] pipeline #${idx} failed`, err);
       });
     });
@@ -116,7 +129,8 @@ exports.run = function() {
       '--maxConcurrent <number>',
       'How many pipelines to run concurrently'
     )
-    .action(function(file, options) {
+    .action(function (file, options)
+    {
       const pipelines = buildPipelines(file);
 
       const scheduler = new Scheduler({
