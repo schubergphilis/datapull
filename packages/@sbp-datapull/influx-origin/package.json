@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/influx-origin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Data origin for InfluxDB: pull data from InfluxDB",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@sbp-datapull/json-config": "^0.0.1",
+    "@sbp-datapull/json-config": "^0.0.2",
     "influx": "^5.0.7",
     "lodash": "^4.17.4"
   },
