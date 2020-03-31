@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/pipelines-scheduler",
-  "version": "0.6.0-alpha.0",
+  "version": "0.6.1-alpha.0",
   "description": "Pipelines scheduler: schedule the run of multiple pipelines",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@sbp-datapull/pipeline": "^0.6.0-alpha.0",
+    "@sbp-datapull/pipeline": "^0.6.1-alpha.0",
     "bottleneck": "^1.16.0"
   }
 }
