@@ -3,5 +3,5 @@
 lerna-debug.log
 
 node_modules
-packages/@datapull/*/node_modules
-packages/@datapull/*/package-lock.json
+packages/@sbp-datapull/*/node_modules
+packages/@sbp-datapull/*/package-lock.json

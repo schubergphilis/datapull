@@ -1,5 +1,5 @@
 {
-  "name": "@datapull/splunk-origin",
+  "name": "@sbp-datapull/splunk-origin",
   "version": "0.5.2",
   "description": "Data origin for Datapull: pull data from Splunk",
   "main": "index.js",
