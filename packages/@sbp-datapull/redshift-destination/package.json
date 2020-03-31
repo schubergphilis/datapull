@@ -11,5 +11,5 @@
     "@sbp-datapull/json-config": "^0.0.1",
     "pg": "^7.4.3"
   },
-  "gitHead": "75ef311505918478ced716b8c4ada69cec22f92a"
+  "gitHead": "3ef944e75a5db1d5a5090bdde7dab1a13a7ea3e9"
 }
