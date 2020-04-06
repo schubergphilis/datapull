@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/pipeline",
-  "version": "0.6.7",
+  "version": "0.6.8",
   "description": "Pipeline reads a yaml file with pipeline declaration, builds a plan for the given pipeline and runs it",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "@sbp-datapull/atlassian-origin": "^0.6.0",
     "@sbp-datapull/aws-costexplorer-origin": "^0.6.0",
     "@sbp-datapull/aws-destination": "^0.6.6",
-    "@sbp-datapull/aws-origin": "^0.6.7",
+    "@sbp-datapull/aws-origin": "^0.6.8",
     "@sbp-datapull/bigquery-origin": "^0.6.0",
     "@sbp-datapull/filter-transformer": "^0.6.0",
     "@sbp-datapull/http-api-origin": "^0.6.0",
