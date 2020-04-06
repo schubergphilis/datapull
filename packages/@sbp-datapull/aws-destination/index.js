@@ -79,11 +79,27 @@ class AwsDestination {
       }
 
       const sendToKinesis = records => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
           console.log(
             `[AWS Destination] pushing ${params.Records.length} messages to aws (out of ${messages.length} total)`
           );
+          if (this.config.roleArn)
+          {
 
+            const sts = new aws.STS()
+            const stsParams = {
+              RoleArn: this.config.roleArn,
+              RoleSessionName: `${Date.now()}`
+            };
+            console.debug(`Trying to assume role as [${this.config.roleArn}]`);
+            const { Credentials } = await sts.assumeRole(stsParams).promise();
+            const { AccessKeyId, SecretAccessKey, SessionToken } = Credentials
+            this.serviceClient.config.update({
+              accessKeyId: AccessKeyId,
+              secretAccessKey: SecretAccessKey,
+              sessionToken: SessionToken,
+            })
+          }
           const sendAttempt = records => {
             params.Records = records;
 
@@ -136,7 +152,7 @@ class AwsDestination {
       splitIntoBatches(params.Records, (err, chunks) => {
         if (err) {
           console.error(
-            `[AWS Destination] could not split records into batches`,
+            '[AWS Destination] could not split records into batches',
             err
           );
           return reject(err);
