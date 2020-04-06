@@ -9,7 +9,7 @@ exports.build = function(config) {
     transformers: [],
     destinations: []
   };
-
+  console.debug(config)
   Object.keys(config)
     .filter(i => config[i].runner) // all top-level objects that do not specify a "runner" are ignored
     .forEach(k => {

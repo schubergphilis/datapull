@@ -63,7 +63,7 @@ class AwsOrigin
     {
       throw new Error('region is not specified');
     }
-
+    const assumedRoleConfig = {}
     if (config.roleArn)
     {
       const sts = new aws.STS();
@@ -74,9 +74,9 @@ class AwsOrigin
       console.debug(`Trying to assume role as [${config.roleArn}]`)
       const { Credentials } = await sts.assumeRole(stsParams).promise();
       const { AccessKeyId, SecretAccessKey, SessionToken } = Credentials
-      config.accessKeyId = AccessKeyId
-      config.secretAccessKey = SecretAccessKey
-      config.sessionToken = SessionToken
+      assumedRoleConfig.accessKeyId = AccessKeyId
+      assumedRoleConfig.secretAccessKey = SecretAccessKey
+      assumedRoleConfig.sessionToken = SessionToken
     } else
     {
       if (!config.accessKeyId)
@@ -91,7 +91,7 @@ class AwsOrigin
       }
     }
 
-    const serviceClient = new Service(config);
+    const serviceClient = new Service({...config,...assumedRoleConfig});
 
     if (!serviceClient[this.config.method])
     {
