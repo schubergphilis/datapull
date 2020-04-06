@@ -92,7 +92,7 @@ class AwsDestination {
               RoleSessionName: `${Date.now()}`
             };
             console.debug(`Trying to assume role as [${this.config.roleArn}]`);
-            const { Credentials } = await sts.(stsParams).promise();
+            const { Credentials } = await sts.assumeRole(stsParams).promise();
             const { AccessKeyId, SecretAccessKey, SessionToken } = Credentials
             this.serviceClient.config.update({
               accessKeyId: AccessKeyId,
