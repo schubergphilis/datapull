@@ -72,6 +72,7 @@ class AwsOrigin
         RoleSessionName: `${Date.now()}`
       };
       console.debug(`Trying to assume role as [${config.roleArn}]`)
+      console.debug(config)
       const { Credentials } = await sts.assumeRole(stsParams).promise();
       const { AccessKeyId, SecretAccessKey, SessionToken } = Credentials
       assumedRoleConfig.accessKeyId = AccessKeyId
