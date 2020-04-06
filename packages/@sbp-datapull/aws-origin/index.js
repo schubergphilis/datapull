@@ -1,5 +1,7 @@
 const aws = require('aws-sdk');
 
+const sts = new aws.STS();
+
 class AwsOrigin
 {
   constructor(config)
@@ -66,18 +68,24 @@ class AwsOrigin
     const assumedRoleConfig = {}
     if (config.roleArn)
     {
-      const sts = new aws.STS();
       const stsParams = {
         RoleArn: config.roleArn,
         RoleSessionName: `${Date.now()}`
       };
-      console.debug(`Trying to assume role as [${config.roleArn}]`)
-      console.debug(config)
-      const { Credentials } = await sts.assumeRole(stsParams).promise();
-      const { AccessKeyId, SecretAccessKey, SessionToken } = Credentials
-      assumedRoleConfig.accessKeyId = AccessKeyId
-      assumedRoleConfig.secretAccessKey = SecretAccessKey
-      assumedRoleConfig.sessionToken = SessionToken
+      try
+      {
+        console.debug(`Trying to assume role as [${config.roleArn}]`)
+        console.debug('__1', config)
+        const { Credentials } = await sts.assumeRole(stsParams).promise();
+        const { AccessKeyId, SecretAccessKey, SessionToken } = Credentials
+        assumedRoleConfig.accessKeyId = AccessKeyId
+        assumedRoleConfig.secretAccessKey = SecretAccessKey
+        assumedRoleConfig.sessionToken = SessionToken
+      } catch (error)
+      {
+        console.error('__2', error)
+        throw error
+      }
     } else
     {
       if (!config.accessKeyId)
@@ -92,7 +100,7 @@ class AwsOrigin
       }
     }
 
-    const serviceClient = new Service({...config,...assumedRoleConfig});
+    const serviceClient = new Service({ ...config, ...assumedRoleConfig });
 
     if (!serviceClient[this.config.method])
     {
@@ -105,7 +113,6 @@ class AwsOrigin
     {
       params = Object.assign({}, this.config.requestParams);
     }
-    console.log('[AWS Origin] params', params);
 
     const countResults = results =>
     {
@@ -126,10 +133,9 @@ class AwsOrigin
       {
         params.NextToken = nextToken;
       }
-
       const resp = await serviceClient[this.config.method]
         .call(serviceClient, params)
-        .promise();
+        .promise()
       const newResults = this.mergeResults(resp, results);
       if (resp.NextToken)
       {

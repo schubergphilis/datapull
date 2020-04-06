@@ -5,6 +5,7 @@ const splitIntoBatches = require('./util/batch-splitter');
 const Bottleneck = require('bottleneck');
 
 const SECONDS = 1000;
+const sts = new aws.STS()
 
 function delay(t) {
   return new Promise(resolve => {
@@ -86,7 +87,6 @@ class AwsDestination {
           if (this.config.roleArn)
           {
 
-            const sts = new aws.STS()
             const stsParams = {
               RoleArn: this.config.roleArn,
               RoleSessionName: `${Date.now()}`
