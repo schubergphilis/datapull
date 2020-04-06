@@ -72,22 +72,12 @@ class AwsOrigin
         RoleArn: config.roleArn,
         RoleSessionName: `${Date.now()}`
       };
-      try
-      {
         console.debug(`Trying to assume role as [${config.roleArn}]`)
-        console.debug('__1', config)
-        console.debug('__1', await sts.getCallerIdentity().promise())
         const { Credentials } = await sts.assumeRole(stsParams).promise();
         const { AccessKeyId, SecretAccessKey, SessionToken } = Credentials
         assumedRoleConfig.accessKeyId = AccessKeyId
         assumedRoleConfig.secretAccessKey = SecretAccessKey
         assumedRoleConfig.sessionToken = SessionToken
-      } catch (error)
-      {
-        console.debug('__2a', await sts.getCallerIdentity().promise())
-        console.error('__2b', error)
-        throw error
-      }
     } else
     {
       if (!config.accessKeyId)
