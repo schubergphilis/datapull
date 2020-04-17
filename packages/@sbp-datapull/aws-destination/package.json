@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/aws-destination",
-  "version": "0.6.9",
+  "version": "0.6.12",
   "description": "Data destination for Datapull: send your data to AWS services",
   "main": "index.js",
   "scripts": {
