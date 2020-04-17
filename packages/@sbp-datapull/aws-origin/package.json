@@ -1,0 +1,14 @@
+{
+  "name": "@sbp-datapull/aws-origin",
+  "version": "0.6.8",
+  "description": "Data origin for Datapull: pull your public cloud data using AWS SDK",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.142.0"
+  },
+  "gitHead": "3ef944e75a5db1d5a5090bdde7dab1a13a7ea3e9"
+}

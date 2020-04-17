@@ -1,0 +1,15 @@
+{
+  "name": "@sbp-datapull/splunk-origin",
+  "version": "0.6.0",
+  "description": "Data origin for Datapull: pull data from Splunk",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.83.0",
+    "request-promise-native": "^1.0.5"
+  },
+  "gitHead": "3ef944e75a5db1d5a5090bdde7dab1a13a7ea3e9"
+}
