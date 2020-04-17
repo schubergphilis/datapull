@@ -92,6 +92,7 @@ class OktaOrigin {
             resolve(accumulatedData);
           })
           .catch(err => {
+            console.error(mergedConfig)
             console.error('[Okta origin]', err);
             reject(`[Okta origin] could not fetch data ${err}`);
           });
