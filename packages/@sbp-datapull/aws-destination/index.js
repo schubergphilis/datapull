@@ -58,7 +58,7 @@ class AwsDestination {
 
     console.debug('[AWS Destination] ' + messages.length + ' message(s) to send');
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const params = {};
 
       if (this.config.service === 'Kinesis') {
@@ -76,26 +76,26 @@ class AwsDestination {
         return resolve('Dry run');
       }
 
+      if (this.config.roleArn) {
+        const stsParams = {
+          RoleArn: this.config.roleArn,
+          RoleSessionName: `${Date.now()}`
+        };
+        console.debug(`Trying to assume role as [${this.config.roleArn}]`);
+        const { Credentials } = await sts.assumeRole(stsParams).promise();
+        const { AccessKeyId, SecretAccessKey, SessionToken } = Credentials
+        this.serviceClient.config.update({
+          accessKeyId: AccessKeyId,
+          secretAccessKey: SecretAccessKey,
+          sessionToken: SessionToken,
+        })
+      }
+
       const sendToKinesis = records => {
         return new Promise(async (resolve, reject) => {
           console.debug(
             `[AWS Destination] pushing ${params.Records.length} messages to aws (out of ${messages.length} total)`
           );
-          if (this.config.roleArn) {
-
-            const stsParams = {
-              RoleArn: this.config.roleArn,
-              RoleSessionName: `${Date.now()}`
-            };
-            console.debug(`Trying to assume role as [${this.config.roleArn}]`);
-            const { Credentials } = await sts.assumeRole(stsParams).promise();
-            const { AccessKeyId, SecretAccessKey, SessionToken } = Credentials
-            this.serviceClient.config.update({
-              accessKeyId: AccessKeyId,
-              secretAccessKey: SecretAccessKey,
-              sessionToken: SessionToken,
-            })
-          }
           const sendAttempt = records => {
             params.Records = records;
 
