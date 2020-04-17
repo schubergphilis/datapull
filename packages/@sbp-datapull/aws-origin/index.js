@@ -73,10 +73,6 @@ class AwsOrigin {
         throw new Error('API access key is empty');
       } else if (!config.secretAccessKey) {
         throw new Error('API secret key is empty');
-      } else {
-        console.error('CONFIG',config)
-        console.error('assumedRoleConfig',assumedRoleConfig)
-        throw new Error('API credentials and role ARN are empty');
       }
     }
 
