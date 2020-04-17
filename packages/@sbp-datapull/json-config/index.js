@@ -4,7 +4,6 @@ const moment = require('moment');
 
 // replaces variables in config objects:
 function processConfig(config) {
-  console.log('[JsonConfig] replace variables with ENV variables if needed');
   const data = {
     env: process.env,
     moment: moment

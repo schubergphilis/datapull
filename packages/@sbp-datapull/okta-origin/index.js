@@ -46,13 +46,13 @@ class OktaOrigin {
     }
 
     if (!API_KEY) {
-      throw Error(`Okta Origin: please specify an API KEY in the config`);
+      throw Error('Okta Origin: please specify an API KEY in the config');
     }
 
     if (this.config.isPaginatedList) {
       // setup recursive fetch:
       const fetchListData = (url, paginationLink, accumulatedData) => {
-        console.log('[Okta Origin] fetching', METHOD, url);
+        console.debug('[Okta Origin] fetching', METHOD, url);
 
         return got[METHOD](paginationLink || url, {
           headers: {
@@ -99,7 +99,7 @@ class OktaOrigin {
     }
 
     throw new Error(
-      `Okta Origin: set 'isPaginatedList' to true, other types of request are not currently supported.`
+      'Okta Origin: set \'isPaginatedList\' to true, other types of request are not currently supported.'
     );
   }
 
@@ -107,14 +107,14 @@ class OktaOrigin {
     const parts = linkHeader.split(',');
 
     const nextLinks = parts.filter(p => {
-      return p.match(/rel=\"next\"/);
+      return p.match(/rel="next"/);
     });
 
     if (!nextLinks.length) {
       return null;
     }
 
-    const matches = nextLinks[0].match(/\<(.*)\>/);
+    const matches = nextLinks[0].match(/<(.*)>/);
 
     if (matches.length > 1) {
       return matches[1];

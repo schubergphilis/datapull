@@ -1,6 +1,8 @@
 const buildMessage = require('./message-build').buildMessage;
 const uuidv4 = require('uuid/v4');
 
+require('../utils/logging')
+
 exports.run = function (pipeline, options={}) {
   // prepare config:
   let config = null;
@@ -14,7 +16,6 @@ exports.run = function (pipeline, options={}) {
   }
 
   if (pipeline.configProcessors) {
-    console.log('[Pipeline] Run configuration');
     pipeline.configProcessors.forEach(processor => {
       config = processor.process(config || pipeline.config);
     });
@@ -34,7 +35,7 @@ exports.run = function (pipeline, options={}) {
     })
     .then(resp => {
       pipeline.originRawData = resp;
-      console.log(`[Pipeline] starting to transform data with ${pipeline.transformers.length} transformers`);
+      console.debug(`[Pipeline] starting to transform data with ${pipeline.transformers.length} transformers`);
 
       return new Promise((resolve, reject) => {
         let transformedData = resp;
@@ -54,7 +55,7 @@ exports.run = function (pipeline, options={}) {
           // transform data and recursively call runTransformer to proceed with the transformation chain
           transformers[idx].runner.transform(transformedData || resp)
             .catch(err => {
-              console.error("Could not transform", transformers[idx].name, err);
+              console.error('Could not transform', transformers[idx].name, err);
               reject(err);
             })
             .then(data => {
@@ -86,16 +87,16 @@ exports.run = function (pipeline, options={}) {
       // show stats if needed:
       if (options.showMessageSizes) {
         messages.forEach(m => {
-          console.log('[Pipeline] base64 record size', new Buffer(JSON.stringify(m)).toString('base64').length);
+          console.info('[Pipeline] base64 record size', new Buffer(JSON.stringify(m)).toString('base64').length);
         });
       }
 
       if (options.showOriginConfig) {
-        console.log(`[Pipeline] config`, config);
+        console.info('[Pipeline] config', config);
       }
 
       if (options.showMessagesCount) {
-        console.log(`[Pipeline] messages to be delivered: ${messages.length}`);
+        console.info(`[Pipeline] messages to be delivered: ${messages.length}`);
       }
 
       if (options.stopBeforeDestination) {
@@ -109,7 +110,7 @@ exports.run = function (pipeline, options={}) {
       console.error('[Pipeline] sending failed', pipeline.origin.name, ':', err)
       throw err;
     })
-    .then(resp => {
-      console.log('[Pipeline] finished');
+    .then(() => {
+      console.info('[Pipeline] finished');
     });
 };

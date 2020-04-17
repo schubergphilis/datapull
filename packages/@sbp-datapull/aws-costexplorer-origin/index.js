@@ -21,7 +21,7 @@ class AwsCostExplorerOrigin {
   }
 
   pullData(config) {
-    console.log('[AWS Cost Explorer Origin] fetching data');
+    console.debug('[AWS Cost Explorer Origin] fetching data');
 
     const client = new aws.CostExplorer(
       Object.assign(

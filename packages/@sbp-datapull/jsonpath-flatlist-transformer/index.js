@@ -33,7 +33,6 @@ var jp = require('jsonpath');
  */
 class JsonPathFlatListTransformer {
   constructor(config) {
-    console.log('[JsonPathFlatListTransformer]', config);
     this.config = config;
   }
   transform(data) {

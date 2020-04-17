@@ -14,9 +14,8 @@ class SplunkOrigin {
     }
 
     async pullData(config) {
-        console.log('[Splunk] pulling data for ', config.searchName);
+        console.debug('[Splunk] pulling data for ', config.searchName);
 
-        const apiUrl = this.apiUrl;
         const auth = {user: config.username,pass: config.password};
 
         // Splunk operates with self-signed certificates, thus we need

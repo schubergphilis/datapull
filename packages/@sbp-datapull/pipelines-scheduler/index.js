@@ -4,24 +4,19 @@ const Bottleneck = require('bottleneck');
 const SECONDS = 1000;
 const MINUTES = 60 * SECONDS;
 
-class Scheduler
-{
-  constructor(config)
-  {
+class Scheduler {
+  constructor(config) {
     this.config = config;
     this.scheduleName = this.config.name || 'Untitled schedule';
   }
 
-  launch(pipelines)
-  {
-    if (this.config.runImmediately)
-    {
+  launch(pipelines) {
+    if (this.config.runImmediately) {
       return this.run(pipelines);
     }
 
-    if (this.config.runEveryXMinutes)
-    {
-      console.log(
+    if (this.config.runEveryXMinutes) {
+      console.debug(
         `[Pipelines Scheduler] scheduling ${pipelines.length} pipelines run for every ${this.config.runEveryXMinutes} minutes`
       );
       setInterval(
@@ -31,8 +26,7 @@ class Scheduler
     }
   }
 
-  run(pipelines)
-  {
+  run(pipelines) {
     // setup the limiter:const rateLimitConfig = pipelineConfig.rateLimiter || {};
     const maxConcurrent = this.config.maxConcurrent || 100;
 
@@ -41,25 +35,17 @@ class Scheduler
     // run pipelines:
     const now = Date.now();
 
-    console.log(
-      `[Pipelines Scheduler] ${this.scheduleName}: starting new pipelines run. pipeline timestamp:`,
-      now
-    );
-    console.log(
-      `[Pipelines Scheduler] ${this.scheduleName}: number of pipelines scheduled:`,
-      pipelines.length
-    );
-    console.log(
-      `[Pipelines Scheduler] ${this.scheduleName}: number of pipelines to run in parallel:`,
-      maxConcurrent
-    );
+    const header = `[Pipelines Scheduler] ${this.scheduleName}`;
 
-    pipelines.forEach((pipeline, idx) =>
-    {
+    console.debug(`${header}: starting new pipelines run. Pipeline timestamp: ${now}`);
+    console.debug(`${header}: number of pipelines scheduled: ${pipelines.length}`);
+    console.debug(`${header}: number of pipelines to run in parallel: ${maxConcurrent}`);
+
+    pipelines.forEach((pipeline, idx) => {
       // all pipelines should have the same timestamp:
       pipeline.timestamp = now;
 
-      console.log(
+      console.debug(
         `[main] ${
         this.config.pipelineConfig.dryRun ? 'dry' : ''
         } run for pipeline #${idx}: ${pipeline.timestamp}`
@@ -72,15 +58,13 @@ class Scheduler
       );
     });
 
-    limiter.on('idle', () =>
-    {
-      console.log(
+    limiter.on('idle', () => {
+      console.warn(
         `[Pipelines Scheduler] Schedule "${this.scheduleName}" queue is now idle`
       );
     });
 
-    limiter.on('dropped', dropped =>
-    {
+    limiter.on('dropped', dropped => {
       console.warn(
         `[Pipelines Scheduler] Pipeline is dropped in schedule "${this.scheduleName}"`,
         dropped

@@ -73,7 +73,7 @@ class MySQLOrigin {
       interpolate: /\${([\s\S]+?)}/g
     })(data);
 
-    console.log(`[mysql Origin] Running the query: ${query}`);
+    console.debug(`[mysql Origin] Running the query: ${query}`);
 
     return new Promise((resolve, reject) => {
       connection.connect(err => {
@@ -97,7 +97,7 @@ class MySQLOrigin {
   }
 
   closeConnection(connection) {
-    console.log('[mysql origin] closing connection now');
+    console.debug('[mysql origin] closing connection now');
     connection.end(function(err) {
       if (err) {
         console.error(
@@ -105,11 +105,11 @@ class MySQLOrigin {
           err
         );
         connection.destroy();
-        console.log('[mysql origin] connection is destroyed');
+        console.warn('[mysql origin] connection is destroyed');
         return;
       }
 
-      console.log('[mysql origin] connection is closed');
+      console.debug('[mysql origin] connection is closed');
     });
   }
 }

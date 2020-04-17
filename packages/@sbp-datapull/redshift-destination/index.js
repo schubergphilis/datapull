@@ -56,7 +56,7 @@ class RedshiftDestination {
       Object.keys(m).map(key => {
         keys.push(key);
         values.push(m[key]);
-        placeholders.push(`\$${placeholders.length + 1}`); // $1, $2, $3...
+        placeholders.push(`$${placeholders.length + 1}`); // $1, $2, $3...
       });
 
       if (this.config.primaryKey && m[this.config.primaryKey]) {
@@ -65,7 +65,7 @@ class RedshiftDestination {
           m[this.config.primaryKey]
         ]);
         if (resp.rows[0].c > 0) {
-          console.log(
+          console.warn(
             `[Redshift destination] Row with primary key ${
               m[this.config.primaryKey]
             } already exists in target table`
@@ -86,7 +86,7 @@ class RedshiftDestination {
 
     await client.query('end transaction');
 
-    console.log(
+    console.info(
       `[Redshift destination] ${insertCount} row(s) inserted into ${this.config.table}. ${skipCount} message(s) skipped.`
     );
   }

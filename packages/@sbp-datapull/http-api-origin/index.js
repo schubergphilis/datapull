@@ -94,7 +94,7 @@ class HttpApiOrigin {
   }
 
   pullData(config) {
-    console.log('[HTTP Origin] fetching', this.method, this.url);
+    console.debug('[HTTP Origin] fetching', this.method, this.url);
 
     return new Promise(async (resolve, reject) => {
       let credentials;

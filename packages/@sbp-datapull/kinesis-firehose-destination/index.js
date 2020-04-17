@@ -44,11 +44,11 @@ class KinesisFirehoseDestination {
   }
   sendMessages(messages, dryRun) {
     if (messages.length === 0) {
-      console.log('[Firehose Destination] Nothing to push: 0 messages');
+      console.warn('[Firehose Destination] Nothing to push: 0 messages');
       return Promise.resolve('No messages to push');
     }
 
-    console.log(
+    console.debug(
       '[Firehose Destination] ' + messages.length + ' message(s) to send'
     );
 
@@ -65,18 +65,15 @@ class KinesisFirehoseDestination {
       });
 
       if (dryRun) {
-        console.log(
+        console.warn(
           '[Firehose Destination] Dry run: skipping sending messages.'
         );
-        params.Records.forEach(r => {
-          console.log(r);
-        });
         return resolve('Dry run');
       }
 
       const sendToFirehose = records => {
         return new Promise((resolve, reject) => {
-          console.log(
+          console.debug(
             `[Firehose Destination] pushing ${params.Records.length} messages to aws (out of ${messages.length} total)`
           );
 
@@ -88,7 +85,7 @@ class KinesisFirehoseDestination {
               collectionSize += r.Data.length;
             });
 
-            console.log(
+            console.debug(
               `[Firehose Destination] attempting to send ${records.length} messages. Collection size: ${collectionSize}`
             );
 
@@ -117,7 +114,7 @@ class KinesisFirehoseDestination {
                 }
 
                 // job finished:
-                console.log(
+                console.info(
                   `[Firehose Destination] finished sending ${params.Records.length} messages`
                 );
                 resolve(resp);
@@ -132,14 +129,14 @@ class KinesisFirehoseDestination {
       splitIntoBatches(params.Records, (err, chunks) => {
         if (err) {
           console.error(
-            `[Firehose Destination] could not split records into batches`,
+            '[Firehose Destination] could not split records into batches',
             err
           );
           return reject(err);
         }
 
         const messagesTotal = params.Records.length;
-        console.log(
+        console.debug(
           `[Firehose Destination] pushing ${messagesTotal} messages in ${chunks.length} chunk(s)`
         );
 
@@ -168,7 +165,7 @@ class KinesisFirehoseDestination {
         const promises = chunks.map(ch => limiter.schedule(sendToFirehose, ch));
         Promise.all(promises)
           .then(responses => {
-            console.log(
+            console.debug(
               `[Firehose Destination] finished sending ${messagesTotal} messages in ${chunks.length} chunk(s)`
             );
             resolve(responses);

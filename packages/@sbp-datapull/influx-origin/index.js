@@ -75,7 +75,7 @@ class InfluxOrigin {
       interpolate: /\${([\s\S]+?)}/g
     })(data);
 
-    console.log(`[Influx Origin] Running the query: ${query}`);
+    console.debug(`[Influx Origin] Running the query: ${query}`);
 
     return influx.query(query).catch(err => {
       console.error('[Influx origin]', err);

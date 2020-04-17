@@ -4,7 +4,9 @@ const chef_api = require('chef-api');
 const Bottleneck = require('bottleneck');
 
 class ChefOrigin {
-  constructor(stepConfig) {}
+  constructor(stepConfig) {
+    this.stepConfig = stepConfig
+  }
 
   get originDeclaration() {
     return {
@@ -14,15 +16,15 @@ class ChefOrigin {
   }
 
   async pullData(pipelineConfig) {
-    console.log('[Chef] pulling data for ', pipelineConfig.apiUrl);
+    console.debug('[Chef] pulling data for ', pipelineConfig.apiUrl);
     const options = {
       user_name: pipelineConfig.username,
       url: pipelineConfig.apiUrl
     };
 
     if (!pipelineConfig.key && !pipelineConfig.key_path) {
-      console.error(`[Chef origin] key path or key must be specified`);
-      throw Error(`Key path or key must be specified`);
+      console.error('[Chef origin] key path or key must be specified');
+      throw Error('Key path or key must be specified');
     }
 
     if (pipelineConfig.key) {
@@ -31,8 +33,8 @@ class ChefOrigin {
 
     if (pipelineConfig.key_path) {
       if (!fs.existsSync(pipelineConfig.key_path)) {
-        console.error(`[Chef origin] key does not exist in the given path`);
-        throw Error(`Key does not exist in the given path`);
+        console.error('[Chef origin] key does not exist in the given path');
+        throw Error('Key does not exist in the given path');
       }
 
       options.key_path = pipelineConfig.key_path;

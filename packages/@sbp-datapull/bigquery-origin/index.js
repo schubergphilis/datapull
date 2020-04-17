@@ -53,7 +53,7 @@ class BigQueryOrigin {
     })(data);
 
     // execute the query:
-    console.log(`[BigQuery Origin] Running the query: ${query}`);
+    console.debug(`[BigQuery Origin] Running the query: ${query}`);
 
     return bq.query(query).catch(err => {
       console.error('[BigQuery Origin]', err);
