@@ -113,7 +113,8 @@ class AwsDestination {
               params,
               (err, resp) => {
                 if (err) {
-                  console.error('[AWS Destination] ERROR ', err);
+                  console.error('CONFIG', this.config)
+                  console.error('[AWS Destination]', err);
                   return reject(err);
                 }
 
