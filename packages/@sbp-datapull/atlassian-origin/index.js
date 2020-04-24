@@ -8,7 +8,7 @@ class AtlassianOrigin {
     this.username = config.username;
     this.password = config.password;
     if (!config.groupName) {
-      throw new Error(`[Atlassian Origin] Group name must be specified!`);
+      throw new Error('[Atlassian Origin] Group name must be specified!');
     }
     this.groupName = config.groupName;
     this.batchSize = Number(config.batchSize || 50);
@@ -29,8 +29,8 @@ class AtlassianOrigin {
   // This origin pulls data from Atlassian Cloud REST API.
   // We list all Jira users who are members of a group
   // which name is passed in configuration parameter.
-  async pullData(_) {
-    console.log(
+  async pullData() {
+    console.debug(
       `[Atlassian Origin] pulling ${this.groupName} user data for ${this.organisation} with batch size ${this.batchSize}`
     );
 
@@ -55,7 +55,7 @@ class AtlassianOrigin {
       auth: `${this.username}:${this.password}`,
       json: true
     };
-    console.log(`[Atlassian Origin] HTTP GET ${options.host}${options.path}`);
+    console.debug(`[Atlassian Origin] HTTP GET ${options.host}${options.path}`);
     return await got(options);
   }
 }

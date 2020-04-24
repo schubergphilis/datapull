@@ -51,11 +51,11 @@ class KinesisStreamDestination {
   }
   sendMessages(messages, dryRun) {
     if (messages.length === 0) {
-      console.log('[AWS Destination] Nothing to push: 0 messages');
+      console.debug('[AWS Destination] Nothing to push: 0 messages');
       return Promise.resolve('No messages to push');
     }
 
-    console.log('[AWS Destination] ' + messages.length + ' message(s) to send');
+    console.debug('[AWS Destination] ' + messages.length + ' message(s) to send');
 
     return new Promise((resolve, reject) => {
       const params = {};
@@ -71,16 +71,13 @@ class KinesisStreamDestination {
       }
 
       if (dryRun) {
-        console.log('[AWS Destination] Dry run: skipping sending messages.');
-        params.Records.forEach(r => {
-          console.log(r);
-        });
+        console.warn('[AWS Destination] Dry run: skipping sending messages.');
         return resolve('Dry run');
       }
 
       const sendToKinesis = records => {
         return new Promise((resolve, reject) => {
-          console.log(
+          console.debug(
             `[AWS Destination] pushing ${params.Records.length} messages to aws (out of ${messages.length} total)`
           );
 
@@ -92,7 +89,7 @@ class KinesisStreamDestination {
               collectionSize += r.Data.length + r.PartitionKey.length;
             });
 
-            console.log(
+            console.debug(
               `[AWS Destination] attempting to send ${records.length} messages. Collection size: ${collectionSize}`
             );
 
@@ -121,7 +118,7 @@ class KinesisStreamDestination {
                 }
 
                 // job finished:
-                console.log(
+                console.info(
                   `[AWS Destination] finished sending ${params.Records.length} messages`
                 );
                 resolve(resp);
@@ -136,14 +133,14 @@ class KinesisStreamDestination {
       splitIntoBatches(params.Records, (err, chunks) => {
         if (err) {
           console.error(
-            `[AWS Destination] could not split records into batches`,
+            '[AWS Destination] could not split records into batches',
             err
           );
           return reject(err);
         }
 
         const messagesTotal = params.Records.length;
-        console.log(
+        console.debug(
           `[AWS Destination] pushing ${messagesTotal} messages in ${chunks.length} chunk(s)`
         );
 
@@ -172,7 +169,7 @@ class KinesisStreamDestination {
         const promises = chunks.map(ch => limiter.schedule(sendToKinesis, ch));
         Promise.all(promises)
           .then(responses => {
-            console.log(
+            console.debug(
               `[AWS Destination] finished sending ${messagesTotal} messages in ${chunks.length} chunk(s)`
             );
             resolve(responses);

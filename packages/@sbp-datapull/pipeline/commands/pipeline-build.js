@@ -107,7 +107,7 @@ exports.build = function(config) {
     });
   }
 
-  console.log('[Pipeline] intermediate pipelines length:', pipelines.length);
+  console.debug('[Pipeline] intermediate pipelines length:', pipelines.length);
 
   // 3 - set up origins:
   const newPipelines = [];

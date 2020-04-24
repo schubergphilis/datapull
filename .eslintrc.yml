@@ -2,7 +2,7 @@ env:
   browser: true
   node: true
   es6: true
-extends: 'eslint:recommended'
+extends: "eslint:recommended"
 globals:
   Atomics: readonly
   SharedArrayBuffer: readonly
@@ -10,5 +10,6 @@ globals:
 parserOptions:
   ecmaVersion: 2018
 rules:
-  'no-undef': 0
-  'quotes': ['error', 'single']
+  "no-undef": 0
+  "quotes": ["error", "single"]
+  brace-style: ["error", "1tbs"]

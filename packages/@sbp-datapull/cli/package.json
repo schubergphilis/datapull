@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/cli",
-  "version": "0.6.8",
+  "version": "0.6.14",
   "description": "CLI for datapull",
   "main": "index.js",
   "bin": {
@@ -11,12 +11,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@sbp-datapull/pipelines-scheduler": "^0.6.8",
+    "@sbp-datapull/pipelines-scheduler": "^0.6.14",
     "cli-table2": "^0.2.0",
     "commander": "^2.11.0"
   },
   "devDependencies": {
-    "@sbp-datapull/pipeline": "^0.6.8"
+    "@sbp-datapull/pipeline": "^0.6.14"
   },
   "gitHead": "3ef944e75a5db1d5a5090bdde7dab1a13a7ea3e9"
 }
