@@ -63,11 +63,12 @@ class AwsOrigin {
         RoleSessionName: `${Date.now()}`
       };
         console.debug(`Trying to assume role as [${config.roleArn}]`)
-        const { Credentials } = await sts.assumeRole(stsParams).promise();
+        const { Credentials, AssumedRoleUser } = await sts.assumeRole(stsParams).promise();
         const { AccessKeyId, SecretAccessKey, SessionToken } = Credentials
         assumedRoleConfig.accessKeyId = AccessKeyId
         assumedRoleConfig.secretAccessKey = SecretAccessKey
         assumedRoleConfig.sessionToken = SessionToken
+        console.debug('AssumedRole:', AssumedRoleUser)
     } else {
       if (!config.accessKeyId) {
         throw new Error('API access key is empty');
