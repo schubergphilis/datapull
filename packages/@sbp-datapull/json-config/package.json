@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/json-config",
-  "version": "0.6.9",
+  "version": "0.6.15",
   "description": "JSON configurator for Datapull pipelines",
   "main": "index.js",
   "scripts": {
