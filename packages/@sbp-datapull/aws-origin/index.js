@@ -76,8 +76,8 @@ class AwsOrigin {
         throw new Error('API secret key is empty');
       }
     }
-
-    const serviceClient = new Service({ ...config, ...assumedRoleConfig });
+    const serviceConfig = { ...config, ...assumedRoleConfig }
+    const serviceClient = new Service(serviceConfig);
 
     if (!serviceClient[this.config.method]) {
       throw new Error(
@@ -130,7 +130,7 @@ class AwsOrigin {
       try {
         const details = await this.pullDataFromDetailsCall(
           this.config.awsDetailsCall,
-          config,
+          serviceConfig,
           resp
         );
         return resolve(details);
