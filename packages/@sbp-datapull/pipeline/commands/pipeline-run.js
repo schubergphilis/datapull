@@ -7,8 +7,6 @@ exports.run = function (pipeline, options={}) {
   // prepare config:
   let config = null;
 
-  console.debug('Messages', JSON.stringify({pipeline, options},null,2))
-
   if (!pipeline.timestamp) {
     pipeline.timestamp = Date.now();
   }
@@ -104,7 +102,6 @@ exports.run = function (pipeline, options={}) {
       if (options.stopBeforeDestination) {
         return;
       }
-      console.debug('[Messages]',JSON.stringify(messages, null, 2))
       // run destination
       return pipeline.destination.runner(messages, options.dryRun);
     })
@@ -113,6 +110,6 @@ exports.run = function (pipeline, options={}) {
       throw err;
     })
     .then(() => {
-      console.info('[Pipeline] finished');
+      console.debug('[Pipeline] finished');
     });
 };

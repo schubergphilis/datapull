@@ -52,7 +52,7 @@ class AwsDestination {
   }
   sendMessages(messages, dryRun) {
     if (messages.length === 0) {
-      console.debug('[AWS Destination] Nothing to push: 0 messages');
+      console.debug('[AWS Destination] Nothing to push.');
       return Promise.resolve('No messages to push');
     }
 
@@ -82,14 +82,13 @@ class AwsDestination {
           RoleSessionName: `${Date.now()}`
         };
         console.debug(`Trying to assume role as [${this.config.roleArn}]`);
-        const { Credentials, AssumedRoleUser } = await sts.assumeRole(stsParams).promise();
+        const { Credentials } = await sts.assumeRole(stsParams).promise();
         const { AccessKeyId, SecretAccessKey, SessionToken } = Credentials
         this.serviceClient.config.update({
           accessKeyId: AccessKeyId,
           secretAccessKey: SecretAccessKey,
           sessionToken: SessionToken,
         })
-        console.debug('AssumedRole:', AssumedRoleUser)
       }
 
       const sendToKinesis = records => {
