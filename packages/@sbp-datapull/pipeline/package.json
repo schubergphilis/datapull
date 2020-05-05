@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/pipeline",
-  "version": "0.6.17",
+  "version": "0.6.18",
   "description": "Pipeline reads a yaml file with pipeline declaration, builds a plan for the given pipeline and runs it",
   "main": "index.js",
   "scripts": {
