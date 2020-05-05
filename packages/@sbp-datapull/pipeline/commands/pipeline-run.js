@@ -7,6 +7,8 @@ exports.run = function (pipeline, options={}) {
   // prepare config:
   let config = null;
 
+  console.debug('Messages', JSON.stringify({pipeline, options},null,2))
+
   if (!pipeline.timestamp) {
     pipeline.timestamp = Date.now();
   }
