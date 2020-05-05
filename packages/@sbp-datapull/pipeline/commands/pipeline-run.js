@@ -1,4 +1,4 @@
-const buildMessage = require('./message-build').buildMessage;
+const { buildMessage } = require('./message-build');
 const uuidv4 = require('uuid/v4');
 
 require('../utils/logging')
@@ -102,7 +102,7 @@ exports.run = function (pipeline, options={}) {
       if (options.stopBeforeDestination) {
         return;
       }
-
+      console.debug('[Messages]',JSON.stringify(messages, null, 2))
       // run destination
       return pipeline.destination.runner(messages, options.dryRun);
     })
