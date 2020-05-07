@@ -9,7 +9,8 @@
   "license": "MIT",
   "dependencies": {
     "bottleneck": "^1.16.0",
-    "chef-api": "0.6.0",
-    "object-path": "^0.11.4"
+    "crypto": "^1.0.1",
+    "object-path": "^0.11.4",
+    "request-promise": "^4.2.5"
   }
 }
