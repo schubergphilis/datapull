@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/reduce-transformer",
-  "version": "0.6.20",
+  "version": "0.6.21",
   "description": "Data transformer for Datapull: reduce a data set to a single value",
   "main": "index.js",
   "scripts": {

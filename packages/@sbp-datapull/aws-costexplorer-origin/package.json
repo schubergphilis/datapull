@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/aws-costexplorer-origin",
-  "version": "0.6.20",
+  "version": "0.6.21",
   "description": "Data origin for Datapull: pull your costs and usage data using AWS SDK",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@sbp-datapull/json-config": "^0.6.20",
+    "@sbp-datapull/json-config": "^0.6.21",
     "aws-sdk": "^2.252.1"
   },
   "gitHead": "3ef944e75a5db1d5a5090bdde7dab1a13a7ea3e9"
