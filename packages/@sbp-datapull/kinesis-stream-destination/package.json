@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/kinesis-stream-destination",
-  "version": "0.6.15",
+  "version": "0.6.20",
   "description": "Data destination for Datapull: send your data Amazon Kinesis",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@sbp-datapull/json-config": "^0.6.15",
+    "@sbp-datapull/json-config": "^0.6.20",
     "aws-sdk": "^2.146.0",
     "bottleneck": "^1.16.0"
   },

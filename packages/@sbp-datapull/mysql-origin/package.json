@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/mysql-origin",
-  "version": "0.6.15",
+  "version": "0.6.20",
   "description": "Data origin for MySQL: pull data from a MySQL database",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@sbp-datapull/json-config": "^0.6.15",
+    "@sbp-datapull/json-config": "^0.6.20",
     "lodash": "^4.17.4",
     "mysql": "^2.16.0"
   },
