@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/chef-origin",
-  "version": "0.0.1",
+  "version": "0.6.21",
   "description": "Data origin for Datapull: pull data from Splunk",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,8 @@
   "license": "MIT",
   "dependencies": {
     "bottleneck": "^1.16.0",
-    "chef-api": "0.6.0",
-    "object-path": "^0.11.4"
+    "crypto": "^1.0.1",
+    "object-path": "^0.11.4",
+    "request-promise": "^4.2.5"
   }
 }

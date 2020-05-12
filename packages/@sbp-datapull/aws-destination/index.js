@@ -52,7 +52,7 @@ class AwsDestination {
   }
   sendMessages(messages, dryRun) {
     if (messages.length === 0) {
-      console.debug('[AWS Destination] Nothing to push: 0 messages');
+      console.debug('[AWS Destination] Nothing to push.');
       return Promise.resolve('No messages to push');
     }
 
