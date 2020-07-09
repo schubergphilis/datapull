@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/pipeline",
-  "version": "0.6.21",
+  "version": "0.7.0",
   "description": "Pipeline reads a yaml file with pipeline declaration, builds a plan for the given pipeline and runs it",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@sbp-datapull/json-config": "^0.6.21",
+    "@sbp-datapull/json-config": "^0.7.0",
     "deepcopy": "^0.6.3",
     "js-yaml": "^3.10.0",
     "lodash": "^4.17.4",
@@ -16,25 +16,25 @@
     "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "@sbp-datapull/atlassian-origin": "^0.6.21",
-    "@sbp-datapull/aws-costexplorer-origin": "^0.6.21",
-    "@sbp-datapull/aws-destination": "^0.6.21",
-    "@sbp-datapull/aws-origin": "^0.6.21",
-    "@sbp-datapull/bigquery-origin": "^0.6.21",
-    "@sbp-datapull/filter-transformer": "^0.6.21",
-    "@sbp-datapull/http-api-origin": "^0.6.21",
-    "@sbp-datapull/influx-origin": "^0.6.21",
+    "@sbp-datapull/atlassian-origin": "^0.7.0",
+    "@sbp-datapull/aws-costexplorer-origin": "^0.7.0",
+    "@sbp-datapull/aws-destination": "^0.7.0",
+    "@sbp-datapull/aws-origin": "^0.7.0",
+    "@sbp-datapull/bigquery-origin": "^0.7.0",
+    "@sbp-datapull/filter-transformer": "^0.7.0",
+    "@sbp-datapull/http-api-origin": "^0.7.0",
+    "@sbp-datapull/influx-origin": "^0.7.0",
     "@sbp-datapull/json-config": "^0.0.1",
-    "@sbp-datapull/jsonpath-flatlist-transformer": "^0.6.21",
-    "@sbp-datapull/jsonpath-transformer": "^0.6.21",
-    "@sbp-datapull/kinesis-firehose-destination": "^0.6.21",
-    "@sbp-datapull/kinesis-stream-destination": "^0.6.21",
-    "@sbp-datapull/map-transformer": "^0.6.21",
-    "@sbp-datapull/mysql-origin": "^0.6.21",
-    "@sbp-datapull/okta-origin": "^0.6.21",
-    "@sbp-datapull/redshift-destination": "^0.6.21",
-    "@sbp-datapull/reduce-transformer": "^0.6.21",
-    "@sbp-datapull/splunk-origin": "^0.6.21"
+    "@sbp-datapull/jsonpath-flatlist-transformer": "^0.7.0",
+    "@sbp-datapull/jsonpath-transformer": "^0.7.0",
+    "@sbp-datapull/kinesis-firehose-destination": "^0.7.0",
+    "@sbp-datapull/kinesis-stream-destination": "^0.7.0",
+    "@sbp-datapull/map-transformer": "^0.7.0",
+    "@sbp-datapull/mysql-origin": "^0.7.0",
+    "@sbp-datapull/okta-origin": "^0.7.0",
+    "@sbp-datapull/redshift-destination": "^0.7.0",
+    "@sbp-datapull/reduce-transformer": "^0.7.0",
+    "@sbp-datapull/splunk-origin": "^0.7.0"
   },
   "gitHead": "3ef944e75a5db1d5a5090bdde7dab1a13a7ea3e9"
 }
