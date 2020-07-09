@@ -41,7 +41,8 @@ class BigQueryOrigin {
 
     // build bigquery client:
     const bq = new BigQuery({
-      projectId: mergedConfig.projectId
+      projectId: mergedConfig.projectId,
+      credentials: mergedConfig.credentials,
     });
 
     // prepare the query:
