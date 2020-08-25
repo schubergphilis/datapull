@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/splunk-origin",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Data origin for Datapull: pull data from Splunk",
   "main": "index.js",
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/atlassian-origin",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Data origin for Atlassian services: pull data from Jira Cloud and Confluence Cloud API",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@sbp-datapull/json-config": "^0.7.0",
+    "@sbp-datapull/json-config": "^0.8.0",
     "got": "^8.0.0"
   },
   "gitHead": "3ef944e75a5db1d5a5090bdde7dab1a13a7ea3e9"
