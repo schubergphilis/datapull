@@ -2,56 +2,67 @@ const processConfig = require('@sbp-datapull/json-config').processConfig;
 const Influx = require('influx');
 const template = require('lodash/template');
 
-class InfluxOrigin {
-  constructor(stepConfig) {
+class InfluxOrigin
+{
+  constructor(stepConfig)
+  {
     // replace variables in the config:
-    try {
+    try
+    {
       this.config = processConfig(stepConfig);
-    } catch (err) {
+    } catch (err)
+    {
       throw Error(`Could not parse config of Influx origin ${err}`);
     }
   }
 
-  get originDeclaration() {
+  get originDeclaration()
+  {
     return {
       name: ['InfluxDB', this.config.endpoint].join(':'),
       runner: this.pullData.bind(this)
     };
   }
 
-  pullData(pipelineConfig) {
+  pullData(pipelineConfig)
+  {
     // merge step and pipeline configs:
     let mergedConfig = Object.assign(
       {
         port: 443,
         protocol: 'https'
       },
-      pipelineConfig ? pipelineConfig.influx || {} : {},
+      pipelineConfig || {},
       this.config
     );
 
     // validate config:
-    if (!mergedConfig.endpoint) {
+    if (!mergedConfig.endpoint)
+    {
       throw Error(
         'Influx Origin: endpoint is not set up. Please specify `endpoint` in the config'
       );
     }
-    if (!mergedConfig.database) {
+    if (!mergedConfig.database)
+    {
       throw Error(
         'Influx Origin: database is not set up. Please specify `database` in the config'
       );
     }
-    if (!mergedConfig.username) {
+    if (!mergedConfig.username)
+    {
       throw Error(
         'Influx Origin: username is not set up. Please specify `username` in the config'
       );
     }
-    if (!mergedConfig.password) {
+    if (!mergedConfig.password)
+    {
       throw Error(
         'Influx Origin: password is not set up. Please specify `password` in the config'
       );
     }
-    if (!mergedConfig.queryTemplate) {
+    if (!mergedConfig.queryTemplate)
+    {
       throw Error(
         'Influx Origin: queryTemplate is not set up. Please specify `queryTemplate` in the config'
       );
@@ -77,7 +88,8 @@ class InfluxOrigin {
 
     console.debug(`[Influx Origin] Running the query: ${query}`);
 
-    return influx.query(query).catch(err => {
+    return influx.query(query).catch(err =>
+    {
       console.error('[Influx origin]', err);
       throw err;
     });
