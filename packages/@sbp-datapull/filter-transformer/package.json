@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/filter-transformer",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Data transformer for Datapull: filter data that match a given condition",
   "main": "index.js",
   "scripts": {

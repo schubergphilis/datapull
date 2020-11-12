@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/aws-origin",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Data origin for Datapull: pull your public cloud data using AWS SDK",
   "main": "index.js",
   "scripts": {
