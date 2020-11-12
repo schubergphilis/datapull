@@ -1,6 +1,6 @@
 {
   "name": "@sbp-datapull/jsonpath-flatlist-transformer",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Data transformer for Datapull: pull a list of objects from a JSON tree, flattening selected parent fields",
   "main": "index.js",
   "scripts": {
