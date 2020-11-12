@@ -22,10 +22,18 @@ class SplunkOrigin {
         // to disable certificate checks completely.
         const agentOptions = {rejectUnauthorized: false};
 
+        // The query can be executed inside a specific namespace or the global
+        // namespace. For namespaced searches, supply namespacedSearch = true
+        // and app = 'appName' in the configuration
+        let domain = 'services';
+        if (config.namespacedSearch || false) {
+            domain = `servicesNS/${config.username}/${config.app}`
+        }
+
         // Submit search job, acquire search id which will be used for
         // status polling and fetching results
         const searchRequest = await request({
-            uri: `${config.apiUrl}/services/saved/searches/${config.searchName}/dispatch?output_mode=json`,
+            uri: `${config.apiUrl}/${domain}/saved/searches/${config.searchName}/dispatch?output_mode=json`,
             method: 'POST',
             agentOptions: agentOptions,
             auth: auth,
@@ -41,7 +49,7 @@ class SplunkOrigin {
         do {
             await sleep(2000);
             const status = await request({
-                uri: `${config.apiUrl}/services/search/jobs/${sid}?output_mode=json`,
+                uri: `${config.apiUrl}/${domain}/search/jobs/${sid}?output_mode=json`,
                 method: 'GET',
                 agentOptions: agentOptions,
                 auth: auth,
@@ -51,7 +59,7 @@ class SplunkOrigin {
         } while (!done);
 
         const results = await request({
-            uri: `${config.apiUrl}/services/search/jobs/${sid}/results?output_mode=json`,
+            uri: `${config.apiUrl}/${domain}/search/jobs/${sid}/results?output_mode=json`,
             method: 'GET',
             agentOptions: agentOptions,
             auth: auth,
